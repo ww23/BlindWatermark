@@ -1,0 +1,17 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    manifest { 
+        attributes 'Main-Class': 'me.ww23.blindwatermark.BlindWaterMark'
+    }
+    from { (configurations.runtime).collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+dependencies {
+    compile 'org.bytedeco:javacv-platform:1.4.1'
+}
