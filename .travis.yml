@@ -1,3 +1,1 @@
 language: java
-gradle assemble
-gradle check
