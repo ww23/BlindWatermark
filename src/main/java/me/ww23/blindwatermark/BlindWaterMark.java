@@ -15,6 +15,9 @@ public class BlindWaterMark {
         String arg3;
         String arg4;
         String command = args[0];
+
+        BlindWaterMark bwm = new BlindWaterMark();
+
         switch (command) {
             case "encode":
                 if (args.length < 5) {
@@ -24,29 +27,29 @@ public class BlindWaterMark {
                 }
                 arg3 = args[3];
                 arg4 = args[4];
-                encode(arg2, arg3, arg4);
+                bwm.encode(arg2, arg3, arg4);
                 System.out.println("ENCODE SUCCESSFUL");
                 break;
             case "decode":
-                if(args.length == 3) {
-                    decode(arg1, arg2);
-                } else {
+                if (args.length == 3) {
+                    bwm.decode(arg1, arg2);
+                } else if (args.length == 4){
                     arg3 = args[3];
-                    decode(arg1, arg2, arg3);
+                    bwm.decode(arg1, arg2, arg3);
+                } else {
+                    help();
                 }
                 System.out.println("DECODE SUCCESSFUL");
                 break;
             default:
                 help();
-                break;
         }
-
 //        encode("hui.png", "wm.png", "huiwm.png");
 //        decode("hui.png", "huiwm.png","huiwmwm.png");
 
     }
 
-    public static void encode(String image, String watermark, String output) {
+    private void encode(String image, String watermark, String output) {
 
         //load image
         Mat srcImg = imread(image, CV_LOAD_IMAGE_COLOR);
@@ -85,7 +88,7 @@ public class BlindWaterMark {
      * @param output
      *              图像中文本水印
      */
-    public static void decode(String wmImg, String output) {
+    private void decode(String wmImg, String output) {
 
         Mat decImg = imread(wmImg, CV_LOAD_IMAGE_GRAYSCALE);
         if(decImg.empty()) {
@@ -116,7 +119,7 @@ public class BlindWaterMark {
      * @param output
      *              图像中的水印
      */
-    public static void decode(String srcImg, String wmImg, String output) {
+    private void decode(String srcImg, String wmImg, String output) {
         Mat decImg = imread(srcImg, CV_LOAD_IMAGE_GRAYSCALE);
         Mat wm = imread(wmImg, CV_LOAD_IMAGE_GRAYSCALE);
 
@@ -126,21 +129,8 @@ public class BlindWaterMark {
             System.exit(1);
         }
 
-        decImg = startDFT(decImg);
-        wm = startDFT(wm);
-
         //srcImg -= wmImg
-        subtract(wm, decImg, wm);
-
-//        MatVector newPlanes = new MatVector(2);
-//        Mat mag = new Mat();
-//        split(wm, newPlanes);
-//        magnitude(newPlanes.get(1), newPlanes.get(0), mag);
-//        add(Mat.ones(mag.size(), CV_32F).asMat(), mag, mag);
-//        log(mag, mag);
-//        shiftDFT(mag);
-//        mag.convertTo(mag, CV_8UC1);
-//        normalize(mag, mag, 0,255, NORM_MINMAX, CV_8UC1, null);
+        subtract(wm, startDFT(decImg), startDFT(wm));
 
         MatVector newPlanes = new MatVector(2);
         split(wm, newPlanes);
@@ -155,7 +145,7 @@ public class BlindWaterMark {
      *              源图像
      * @return 转化后的图像
      */
-    public static Mat startDFT(Mat srcImg) {
+    private static Mat startDFT(Mat srcImg) {
         MatVector planes = new MatVector(2);
         Mat comImg = new Mat();
         planes.put(0, srcImg);
@@ -172,7 +162,7 @@ public class BlindWaterMark {
      * @param planes
      *              图像变量
      */
-    public static void inverseDFT(Mat comImg, MatVector planes) {
+    private static void inverseDFT(Mat comImg, MatVector planes) {
         idft(comImg, comImg);
         split(comImg, planes);
         normalize(planes.get(0), comImg, 0, 255, NORM_MINMAX, CV_8UC3,null);
@@ -184,7 +174,7 @@ public class BlindWaterMark {
      *              源图像
      * @return 优化后的图像
      */
-    public static Mat optimizedImage(Mat srcImg) {
+    private static Mat optimizedImage(Mat srcImg) {
         Mat padded = new Mat();
         int opRows = getOptimalDFTSize(srcImg.rows());
         int opCols = getOptimalDFTSize(srcImg.cols());
@@ -198,7 +188,7 @@ public class BlindWaterMark {
      * @param comImg
      *              频谱图
      */
-    public static void shiftDFT(Mat comImg) {
+    private static void shiftDFT(Mat comImg) {
         comImg = new Mat(comImg, new Rect(0, 0, comImg.cols() & -2, comImg.rows() & -2));
         int cx = comImg.cols() / 2;
         int cy = comImg.rows() / 2;
@@ -223,18 +213,20 @@ public class BlindWaterMark {
      * @param comImg
      *              频谱图
      */
-    public static void addTextWaterMark(Mat comImg, String watermark) {
+    private static void addTextWaterMark(Mat comImg, String watermark) {
+
         Scalar s = new Scalar(0x00, 0);
         Point p = new Point(comImg.size().width() / 3, comImg.size().height() / 3);
+
+        // add text
+        putText(comImg, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.5, s, 3,
+                20, false);
+        // 旋转图片
+        flip(comImg, comImg, -1);
+
         putText(comImg, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.5, s, 3,
                 20, false);
         flip(comImg, comImg, -1);
-        putText(comImg, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.5, s, 3,
-                20, false);
-        flip(comImg, comImg, -1);
-//        MatVector tmp = new MatVector(2);
-//        split(comImg, tmp);
-//        imwrite("testwm.png", tmp.get(1));
     }
 
     /**
@@ -242,7 +234,7 @@ public class BlindWaterMark {
      * @param comImg
      *              频谱图
      */
-    public static void addImageWaterMark(Mat comImg, String watermark) {
+    private static void addImageWaterMark(Mat comImg, String watermark) {
         Mat wm = imread(watermark, CV_LOAD_IMAGE_GRAYSCALE);
         MatVector planes = new MatVector(2);
         wm.convertTo(wm, CV_32F);
