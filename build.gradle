@@ -13,5 +13,5 @@ jar {
 }
 
 dependencies {
-    compile 'org.bytedeco:javacv-platform:1.4.1'
+    compile 'org.bytedeco.javacpp-presets:opencv:3.4.2-1.4.2'
 }
