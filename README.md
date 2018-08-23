@@ -1,7 +1,6 @@
 # BlindWaterMark
 ***
-
-[![Travis (.org)](https://img.shields.io/travis/USER/REPO.svg)](https://travis-ci.org/ww23/BlindWaterMark)
+[![Build Status](https://travis-ci.org/ww23/BlindWaterMark.svg?branch=master)](https://travis-ci.org/ww23/BlindWaterMark)
 
 Java 盲水印
 在图片上加肉眼无法分辨的水印
