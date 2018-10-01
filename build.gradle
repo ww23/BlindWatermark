@@ -9,9 +9,11 @@ jar {
     manifest { 
         attributes 'Main-Class': 'me.ww23.blindwatermark.BlindWaterMark'
     }
-    from { (configurations.runtime).collect { it.isDirectory() ? it : zipTree(it) } }
+    from {
+        (configurations.runtime).collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 dependencies {
-    compile 'org.bytedeco.javacpp-presets:opencv:3.4.2-1.4.2'
+    compile 'org.bytedeco:javacv-platform:1.4.2'
 }
