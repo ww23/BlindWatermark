@@ -7,7 +7,7 @@ repositories {
 
 jar {
     manifest { 
-        attributes 'Main-Class': 'me.ww23.blindwatermark.BlindWaterMark'
+        attributes 'Main-Class': 'me.ww23.image.InvisibleWatermark'
     }
     from {
         (configurations.runtime).collect { it.isDirectory() ? it : zipTree(it) }

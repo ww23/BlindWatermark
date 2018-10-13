@@ -1,5 +1,5 @@
-# BlindWaterMark
-[![Travis (.org)](https://img.shields.io/travis/USER/REPO.svg)](https://travis-ci.org/ww23/BlindWaterMark)
+# BlindWatermark
+[![Travis (.org)](https://img.shields.io/travis/USER/REPO.svg)](https://travis-ci.org/ww23/BlindWatermark)
 
 Java 盲水印
 在图片上加肉眼无法分辨的水印
@@ -23,7 +23,7 @@ Java 盲水印
 
 ### Usage:
     
-    Usage: java -jar BlindWaterMark.jar <commands> [args...]
+    Usage: java -jar BlindWatermark.jar <commands> [args...]
         commands:
                 encode <option> <image-src>  <watermark-text>       <image-encoded(text)>
                 encode <option> <image-src>  <watermark-image>      <image-encoded(image)>
@@ -33,32 +33,32 @@ Java 盲水印
                 -i add image watermark
                 -t add text  watermark
 ### Build:
-因为用的是OpenCV C++的接口，默认会下载所有平台的二进制文件(大概 250M),可以在发布页[下载](https://github.com/ww23/BlindWaterMark.git)`android-arm`, `linux-x86_64`, `macosx-x86_64`, `windows-x86_64`各个平台的包.    
+因为用的是OpenCV C++的接口，默认会下载所有平台的二进制文件(大概 250M),可以在发布页[下载](https://github.com/ww23/BlindWatermark.git)`android-arm`, `linux-x86_64`, `macosx-x86_64`, `windows-x86_64`各个平台的包.
 
 	gradle build
 
 ### Demo:
 
     原图:
-![image](https://github.com/ww23/BlindWaterMark/blob/master/gakki.png)
+![image](https://github.com/ww23/BlindWatermark/blob/master/gakki.png)
 
     加文字水印:
-    java -jar BlindWaterMark.jar encode -t gakki.png mywife gakki-wm-text.png
-![image](https://github.com/ww23/BlindWaterMark/blob/master/gakki-wm-text.png)  
+    java -jar InvisibleWatermark.jar encode -t gakki.png mywife gakki-wm-text.png
+![image](https://github.com/ww23/BlindWatermark/blob/master/gakki-wm-text.png)
 
     加图片水印:
-    java -jar BlindWaterMark.jar encode -i gakki.png wm.png gakki-wm-img.png
-![image](https://github.com/ww23/BlindWaterMark/blob/master/wm.png)  
-![image](https://github.com/ww23/BlindWaterMark/blob/master/gakki-wm-img.png)  
+    java -jar InvisibleWatermark.jar encode -i gakki.png wm.png gakki-wm-img.png
+![image](https://github.com/ww23/BlindWatermark/blob/master/wm.png)
+![image](https://github.com/ww23/BlindWatermark/blob/master/gakki-wm-img.png)
 
     文字水印解码:
-    java -jar BlindWaterMark.jar decode gakki-wm-text.png gakki-text-dc.png
-![image](https://github.com/ww23/BlindWaterMark/blob/master/gakki-text-dc.png)
+    java -jar InvisibleWatermark.jar decode gakki-wm-text.png gakki-text-dc.png
+![image](https://github.com/ww23/BlindWatermark/blob/master/gakki-text-dc.png)
 
     图片水印解码:
-    java -jar BlindWaterMark.jar decode gakki.png gakki-wm-img.png gakki-img-dc.png
-![image](https://github.com/ww23/BlindWaterMark/blob/master/gakki-img-dc.png)
+    java -jar InvisibleWatermark.jar decode gakki.png gakki-wm-img.png gakki-img-dc.png
+![image](https://github.com/ww23/BlindWatermark/blob/master/gakki-img-dc.png)
 
-### Thanks:
+### Reference:
 
 * [OpenCV](https://docs.opencv.org/3.4/d8/d01/tutorial_discrete_fourier_transform.html) Discrete Fourier Transform	
