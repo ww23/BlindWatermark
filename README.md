@@ -43,20 +43,20 @@ Java 盲水印
 ![image](https://github.com/ww23/BlindWatermark/blob/master/gakki.png)
 
     加文字水印:
-    java -jar InvisibleWatermark.jar encode -t gakki.png mywife gakki-wm-text.png
+    java -jar BlindWatermark.jar encode -t gakki.png mywife gakki-wm-text.png
 ![image](https://github.com/ww23/BlindWatermark/blob/master/gakki-wm-text.png)
 
     加图片水印:
-    java -jar InvisibleWatermark.jar encode -i gakki.png wm.png gakki-wm-img.png
+    java -jar BlindWatermark.jar encode -i gakki.png wm.png gakki-wm-img.png
 ![image](https://github.com/ww23/BlindWatermark/blob/master/wm.png)
 ![image](https://github.com/ww23/BlindWatermark/blob/master/gakki-wm-img.png)
 
     文字水印解码:
-    java -jar InvisibleWatermark.jar decode gakki-wm-text.png gakki-text-dc.png
+    java -jar BlindWatermark.jar decode gakki-wm-text.png gakki-text-dc.png
 ![image](https://github.com/ww23/BlindWatermark/blob/master/gakki-text-dc.png)
 
     图片水印解码:
-    java -jar InvisibleWatermark.jar decode gakki.png gakki-wm-img.png gakki-img-dc.png
+    java -jar BlindWatermark.jar decode gakki.png gakki-wm-img.png gakki-img-dc.png
 ![image](https://github.com/ww23/BlindWatermark/blob/master/gakki-img-dc.png)
 
 ### Reference:
