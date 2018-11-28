@@ -1,72 +1,90 @@
-package me.ww23.blindwatermark;
+package me.ww23.image;
 
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgcodecs.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
 
-public class BlindWaterMark {
-
-    private static MatVector newPlanes = new MatVector(3);
-    private static boolean text = false;
+public class BlindWatermark {
 
     public static void main(String[] args) {
-        String arg1 = args[1];
-        String arg2 = args[2];
-        String arg3;
-        String arg4;
-        String command = args[0];
 
-        BlindWaterMark bwm = new BlindWaterMark();
+//        if (args.length == 0) {
+//            help();
+//        }
+//
+//        String command = args[0];
+//
+//        String arg1;
+//        String arg2;
+//        String arg3;
+//        String arg4;
+//
+//        switch (command) {
+//            case "encode":
+//                arg1 = args[1];
+//                if (args.length < 5) {
+//                    help();
+//                }
+//                arg2 = args[2];
+//                arg3 = args[3];
+//                arg4 = args[4];
+//                if (arg1.equals("-t")) {
+//                    encode(arg2, arg3, arg4, true);
+//                } else if (arg1.equals("-i")) {
+//                    encode(arg2, arg3, arg4, false);
+//                }
+//                System.out.println("ENCODE SUCCESSFUL");
+//                break;
+//            case "decode":
+//                arg1 = args[1];
+//                arg2 = args[2];
+//                if (args.length == 3) {
+//                    decode(arg1, arg2);
+//                } else if (args.length == 4) {
+//                    arg3 = args[3];
+//                    decode(arg1, arg2, arg3);
+//                } else {
+//                    help();
+//                }
+//                System.out.println("DECODE SUCCESSFUL");
+//                break;
+//            default:
+//                help();
+//        }
 
-        switch (command) {
-            case "encode":
-                if (args.length < 5) {
-                    help();
-                } else if (arg1.equals("-t")) {
-                    text = true;
-                }
-                arg3 = args[3];
-                arg4 = args[4];
-                bwm.encode(arg2, arg3, arg4);
-                System.out.println("ENCODE SUCCESSFUL");
-                break;
-            case "decode":
-                if (args.length == 3) {
-                    bwm.decode(arg1, arg2);
-                } else if (args.length == 4){
-                    arg3 = args[3];
-                    bwm.decode(arg1, arg2, arg3);
-                } else {
-                    help();
-                }
-                System.out.println("DECODE SUCCESSFUL");
-                break;
-            default:
-                help();
-        }
-//        encode("hui.png", "wm.png", "huiwm.png");
-//        decode("hui.png", "huiwm.png","huiwmwm.png");
-
+        encode("gakki.png", "mywife", "gakki-wm-text.jpg", true);
+        decode("gakki-wm-text.jpg", "gakki-text-dc.jpg");
     }
 
-    private void encode(String image, String watermark, String output) {
+    /**
+     * 添加水印
+     *
+     * @param image     原图
+     * @param watermark 水印
+     * @param output    水印为本 或 图片水印路径
+     * @param option    false:图片水印 true:文字水印
+     */
+    private static void encode(String image, String watermark, String output, Boolean option) {
 
         //load image
         Mat srcImg = imread(image, CV_LOAD_IMAGE_COLOR);
 
-        if(srcImg.empty()) {
+        if (srcImg.empty()) {
             System.exit(1);
         }
+
+        //merge color channels
+        MatVector newPlanes = new MatVector(3);
 
         //split color channels
         MatVector color = new MatVector(3);
         split(srcImg, color);
 
-        MatVector[] planes = { new MatVector(2), new MatVector(2), new MatVector(2)};
-        for(int i = 0; i < color.size() ; i++) {
+        MatVector[] planes = {new MatVector(2), new MatVector(2), new MatVector(2)};
+        for (int i = 0; i < color.size(); i++) {
             color.get(i).convertTo(color.get(i), CV_32F);
             Mat comImg = startDFT(color.get(i));
-            if(text) {
+            if (option) {
                 addTextWaterMark(comImg, watermark);
             } else {
                 addImageWaterMark(comImg, watermark);
@@ -83,15 +101,14 @@ public class BlindWaterMark {
 
     /**
      * 文本水印解码
-     * @param wmImg
-     *              加了文本水印的图像
-     * @param output
-     *              图像中文本水印
+     *
+     * @param wmImg  加了文本水印的图像
+     * @param output 图像中文本水印
      */
-    private void decode(String wmImg, String output) {
+    private static void decode(String wmImg, String output) {
 
         Mat decImg = imread(wmImg, CV_LOAD_IMAGE_GRAYSCALE);
-        if(decImg.empty()) {
+        if (decImg.empty()) {
             System.exit(1);
         }
         decImg.convertTo(decImg, CV_32F);
@@ -103,33 +120,31 @@ public class BlindWaterMark {
         magnitude(newPlanes.get(0), newPlanes.get(1), mag);
         add(Mat.ones(mag.size(), CV_32F).asMat(), mag, mag);
         log(mag, mag);
-        shiftDFT(mag);
+
         mag.convertTo(mag, CV_8UC1);
-        normalize(mag, mag, 0,255, NORM_MINMAX, CV_8UC1, null);
+        normalize(mag, mag, 0, 255, NORM_MINMAX, CV_8UC1, null);
 
         imwrite(output, mag);
     }
 
     /**
      * 图片水印解码
-     * @param srcImg
-     *              原图
-     * @param wmImg
-     *             加了图片水印的图像
-     * @param output
-     *              图像中的水印
+     *
+     * @param srcImg 原图
+     * @param wmImg  加了图片水印的图像
+     * @param output 图像中的水印
      */
-    private void decode(String srcImg, String wmImg, String output) {
+    private static void decode(String srcImg, String wmImg, String output) {
         Mat decImg = imread(srcImg, CV_LOAD_IMAGE_GRAYSCALE);
         Mat wm = imread(wmImg, CV_LOAD_IMAGE_GRAYSCALE);
 
         decImg.convertTo(decImg, CV_32F);
         wm.convertTo(wm, CV_32F);
-        if(decImg.empty() || wm.empty()) {
+        if (decImg.empty() || wm.empty()) {
             System.exit(1);
         }
 
-        //srcImg -= wmImg
+        //srcImg - wmImg
         subtract(wm, startDFT(decImg), startDFT(wm));
 
         MatVector newPlanes = new MatVector(2);
@@ -141,8 +156,8 @@ public class BlindWaterMark {
 
     /**
      * 将图像进行DFT
-     * @param srcImg
-     *              源图像
+     *
+     * @param srcImg 源图像
      * @return 转化后的图像
      */
     private static Mat startDFT(Mat srcImg) {
@@ -151,27 +166,28 @@ public class BlindWaterMark {
         planes.put(0, srcImg);
         planes.put(1, Mat.zeros(srcImg.size(), CV_32F).asMat());
         merge(planes, comImg);
+//        dct(comImg, comImg);
         dft(comImg, comImg);
         return comImg;
     }
 
     /**
      * DFT逆变换
-     * @param comImg
-     *              DFT后的图像
-     * @param planes
-     *              图像变量
+     *
+     * @param comImg DFT后的图像
+     * @param planes 图像变量
      */
     private static void inverseDFT(Mat comImg, MatVector planes) {
+//        idct(comImg, comImg);
         idft(comImg, comImg);
         split(comImg, planes);
-        normalize(planes.get(0), comImg, 0, 255, NORM_MINMAX, CV_8UC3,null);
+        normalize(planes.get(0), comImg, 0, 255, NORM_MINMAX, CV_8UC3, null);
     }
 
     /**
      * 优化图像大小
-     * @param srcImg
-     *              源图像
+     *
+     * @param srcImg 源图像
      * @return 优化后的图像
      */
     private static Mat optimizedImage(Mat srcImg) {
@@ -184,34 +200,9 @@ public class BlindWaterMark {
     }
 
     /**
-     * 交换频谱图四个象限
-     * @param comImg
-     *              频谱图
-     */
-    private static void shiftDFT(Mat comImg) {
-        comImg = new Mat(comImg, new Rect(0, 0, comImg.cols() & -2, comImg.rows() & -2));
-        int cx = comImg.cols() / 2;
-        int cy = comImg.rows() / 2;
-
-        Mat q0 = new Mat(comImg, new Rect(0, 0, cx, cy));
-        Mat q1 = new Mat(comImg, new Rect(cx, 0, cx, cy));
-        Mat q2 = new Mat(comImg, new Rect(0, cy, cx, cy));
-        Mat q3 = new Mat(comImg, new Rect(cx, cy, cx, cy));
-
-        Mat tmp = new Mat();
-        q0.copyTo(tmp);
-        q3.copyTo(q0);
-        tmp.copyTo(q3);
-
-        q1.copyTo(tmp);
-        q2.copyTo(q1);
-        tmp.copyTo(q2);
-    }
-
-    /**
      * 添加文本水印
-     * @param comImg
-     *              频谱图
+     *
+     * @param comImg 频谱图
      */
     private static void addTextWaterMark(Mat comImg, String watermark) {
 
@@ -231,16 +222,15 @@ public class BlindWaterMark {
 
     /**
      * 添加图片水印
-     * @param comImg
-     *              频谱图
+     *
+     * @param comImg 频谱图
      */
     private static void addImageWaterMark(Mat comImg, String watermark) {
         Mat wm = imread(watermark, CV_LOAD_IMAGE_GRAYSCALE);
         MatVector planes = new MatVector(2);
         wm.convertTo(wm, CV_32F);
-        if(wm.empty()) {
+        if (wm.empty()) {
             System.exit(1);
-
         }
         //same size
         createWaterMark(comImg, wm);
@@ -256,11 +246,16 @@ public class BlindWaterMark {
         addWeighted(wm, 0.5, comImg, 1, 0.0, comImg);
     }
 
+    /**
+     * 将图片水印对称并扩展成原图的大小
+     *
+     * @param comImg 原图频域图
+     * @param wm     水印图
+     */
     private static void createWaterMark(Mat comImg, Mat wm) {
         MatVector combine = new MatVector(2);
         Mat iwm = new Mat();
-//        System.out.println(comImg.rows() / 2 - wm.rows());
-//        System.out.println(comImg.cols() - wm.cols());
+
         copyMakeBorder(wm, wm, 0, comImg.rows() / 2 - wm.rows(),
                 0, comImg.cols() - wm.cols(), BORDER_CONSTANT, Scalar.all(0));
         combine.put(0, wm);
@@ -270,7 +265,7 @@ public class BlindWaterMark {
     }
 
     private static void help() {
-        System.out.println("Usage: java -jar BlindWaterMark.jar <commands> [args...] \n" +
+        System.out.println("Usage: java -jar InvisibleWatermark.jar <commands> [args...] \n" +
                 "   commands: \n" +
                 "       encode <option> <image-src>  <watermark-text>       <image-encoded(text)>\n" +
                 "       encode <option> <image-src>  <watermark-image>      <image-encoded(image)>\n" +
