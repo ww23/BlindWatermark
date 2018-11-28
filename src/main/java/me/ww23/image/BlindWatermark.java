@@ -8,52 +8,52 @@ public class BlindWatermark {
 
     public static void main(String[] args) {
 
-//        if (args.length == 0) {
-//            help();
-//        }
-//
-//        String command = args[0];
-//
-//        String arg1;
-//        String arg2;
-//        String arg3;
-//        String arg4;
-//
-//        switch (command) {
-//            case "encode":
-//                arg1 = args[1];
-//                if (args.length < 5) {
-//                    help();
-//                }
-//                arg2 = args[2];
-//                arg3 = args[3];
-//                arg4 = args[4];
-//                if (arg1.equals("-t")) {
-//                    encode(arg2, arg3, arg4, true);
-//                } else if (arg1.equals("-i")) {
-//                    encode(arg2, arg3, arg4, false);
-//                }
-//                System.out.println("ENCODE SUCCESSFUL");
-//                break;
-//            case "decode":
-//                arg1 = args[1];
-//                arg2 = args[2];
-//                if (args.length == 3) {
-//                    decode(arg1, arg2);
-//                } else if (args.length == 4) {
-//                    arg3 = args[3];
-//                    decode(arg1, arg2, arg3);
-//                } else {
-//                    help();
-//                }
-//                System.out.println("DECODE SUCCESSFUL");
-//                break;
-//            default:
-//                help();
-//        }
+       if (args.length == 0) {
+           help();
+       }
 
-        encode("gakki.png", "mywife", "gakki-wm-text.jpg", true);
-        decode("gakki-wm-text.jpg", "gakki-text-dc.jpg");
+       String command = args[0];
+
+       String arg1;
+       String arg2;
+       String arg3;
+       String arg4;
+
+       switch (command) {
+           case "encode":
+               arg1 = args[1];
+               if (args.length < 5) {
+                   help();
+               }
+               arg2 = args[2];
+               arg3 = args[3];
+               arg4 = args[4];
+               if (arg1.equals("-t")) {
+                   encode(arg2, arg3, arg4, true);
+               } else if (arg1.equals("-i")) {
+                   encode(arg2, arg3, arg4, false);
+               }
+               System.out.println("ENCODE SUCCESSFUL");
+               break;
+           case "decode":
+               arg1 = args[1];
+               arg2 = args[2];
+               if (args.length == 3) {
+                   decode(arg1, arg2);
+               } else if (args.length == 4) {
+                   arg3 = args[3];
+                   decode(arg1, arg2, arg3);
+               } else {
+                   help();
+               }
+               System.out.println("DECODE SUCCESSFUL");
+               break;
+           default:
+               help();
+       }
+
+//         encode("gakki.png", "mywife", "gakki-wm-text.jpg", true);
+//         decode("gakki-wm-text.jpg", "gakki-text-dc.jpg");
     }
 
     /**
