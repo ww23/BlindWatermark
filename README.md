@@ -33,7 +33,6 @@ Java 盲水印
                 -i add image watermark
                 -t add text  watermark
 ### Build:
-因为用的是OpenCV C++的接口，默认会下载所有平台的二进制文件(大概 250M),可以在发布页[下载](https://github.com/ww23/BlindWatermark.git)`android-arm`, `linux-x86_64`, `macosx-x86_64`, `windows-x86_64`各个平台的包.
 
 	gradle build
 
