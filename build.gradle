@@ -2,12 +2,13 @@ apply plugin: 'java'
 apply plugin: 'idea'
 
 repositories {
-    mavenCentral()
+//    mavenCentral()
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
 }
 
 jar {
     manifest { 
-        attributes 'Main-Class': 'me.ww23.image.InvisibleWatermark'
+        attributes 'Main-Class': 'me.ww23.image.BlindWatermark'
     }
     from {
         (configurations.runtime).collect { it.isDirectory() ? it : zipTree(it) }
