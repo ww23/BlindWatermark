@@ -1,5 +1,8 @@
 package me.ww23.image;
 
+import org.bytedeco.javacv.CanvasFrame;
+import org.bytedeco.javacv.OpenCVFrameConverter;
+
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgcodecs.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
@@ -52,8 +55,16 @@ public class BlindWatermark {
                help();
        }
 
-//         encode("gakki.png", "mywife", "gakki-wm-text.jpg", true);
-//         decode("gakki-wm-text.jpg", "gakki-text-dc.jpg");
+//        Mat srcImg = imread("gakki.png", CV_RGB2GRAY);
+/*
+        srcImg.convertTo(srcImg, CV_32F);
+
+        Mat result = new Mat(srcImg.size(), srcImg.type());
+        dct(srcImg, result);*/
+//        showMat(srcImg);
+
+//        encode("gakki.png", "wm.png", "gakki-test.png", false);
+//        decode("gakki.png", "gakki-test.png", "test.png");
     }
 
     /**
@@ -82,7 +93,6 @@ public class BlindWatermark {
 
         MatVector[] planes = {new MatVector(2), new MatVector(2), new MatVector(2)};
         for (int i = 0; i < color.size(); i++) {
-            color.get(i).convertTo(color.get(i), CV_32F);
             Mat comImg = startDFT(color.get(i));
             if (option) {
                 addTextWaterMark(comImg, watermark);
@@ -106,12 +116,11 @@ public class BlindWatermark {
      * @param output 图像中文本水印
      */
     private static void decode(String wmImg, String output) {
-
         Mat decImg = imread(wmImg, CV_LOAD_IMAGE_GRAYSCALE);
+
         if (decImg.empty()) {
             System.exit(1);
         }
-        decImg.convertTo(decImg, CV_32F);
 
         decImg = startDFT(decImg);
         MatVector newPlanes = new MatVector(2);
@@ -130,22 +139,23 @@ public class BlindWatermark {
     /**
      * 图片水印解码
      *
-     * @param srcImg 原图
+     * @param srcImg 原图(没有加水印)
      * @param wmImg  加了图片水印的图像
      * @param output 图像中的水印
      */
     private static void decode(String srcImg, String wmImg, String output) {
-        Mat decImg = imread(srcImg, CV_LOAD_IMAGE_GRAYSCALE);
+        Mat src = imread(srcImg, CV_LOAD_IMAGE_GRAYSCALE);
         Mat wm = imread(wmImg, CV_LOAD_IMAGE_GRAYSCALE);
 
-        decImg.convertTo(decImg, CV_32F);
-        wm.convertTo(wm, CV_32F);
-        if (decImg.empty() || wm.empty()) {
+        if (src.empty() || wm.empty()) {
             System.exit(1);
         }
 
+        startDFT(src).convertTo(src, CV_32F);
+        startDFT(wm).convertTo(wm, CV_32F);
+
         //srcImg - wmImg
-        subtract(wm, startDFT(decImg), startDFT(wm));
+        subtract(wm, src, wm);
 
         MatVector newPlanes = new MatVector(2);
         split(wm, newPlanes);
@@ -161,6 +171,7 @@ public class BlindWatermark {
      * @return 转化后的图像
      */
     private static Mat startDFT(Mat srcImg) {
+        srcImg.convertTo(srcImg, CV_32F);
         MatVector planes = new MatVector(2);
         Mat comImg = new Mat();
         planes.put(0, srcImg);
@@ -262,6 +273,15 @@ public class BlindWatermark {
         flip(wm, iwm, -1);
         combine.put(1, iwm);
         vconcat(combine, wm);
+    }
+
+    /**
+     * 显示 Mat
+     * @param matrix 要显示的 Mat
+     */
+    private static void showMat(Mat matrix) {
+        CanvasFrame canvas = new CanvasFrame(matrix.toString());
+        canvas.showImage(new OpenCVFrameConverter.ToMat().convert(matrix));
     }
 
     private static void help() {
