@@ -1,6 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'idea'
-
+version = 'v0.0.2'
 repositories {
 //    mavenCentral()
     maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
