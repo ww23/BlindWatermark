@@ -100,29 +100,29 @@ public class BlindWatermark {
         MatVector color = new MatVector(3);
         split(srcImg, color);
 
-        MatVector[] planes = {new MatVector(2), new MatVector(2), new MatVector(2)};
+        MatVector planes = new MatVector(2);
         for (int i = 0; i < color.size(); i++) {
             Mat comImg = new Mat();
             switch (option) {
                 case DFT_TEXT:
                     comImg = startDFT(color.get(i));
                     addMirrorTextWatermark(comImg, watermark);
-                    inverseDFT(comImg, planes[i]);
+                    inverseDFT(comImg, planes);
                     break;
                 case DFT_IMAGE:
                     comImg = startDFT(color.get(i));
                     addMirrorImageWatermark(comImg, watermark);
-                    inverseDFT(comImg, planes[i]);
+                    inverseDFT(comImg, planes);
                     break;
                 case DCT_TEXT:
                     comImg = startDCT(color.get(i));
                     addTextWatermark(comImg, watermark);
-                    inverseDCT(comImg, planes[i]);
+                    inverseDCT(comImg);
                     break;
                 case DCT_IMAGE:
                     comImg = startDCT(color.get(i));
                     addImageWatermark(comImg, watermark);
-                    inverseDCT(comImg, planes[i]);
+                    inverseDCT(comImg);
                     break;
             }
             color.put(i, comImg);
@@ -130,6 +130,10 @@ public class BlindWatermark {
 
         Mat res = new Mat();
         merge(color, res);
+
+        if (res.rows() != srcImg.rows() || res.cols() != srcImg.cols()) {
+            res = new Mat(res, new Rect(0, 0, srcImg.size().width(), srcImg.size().height()));
+        }
 
         imwrite(output, res);
     }
@@ -250,6 +254,14 @@ public class BlindWatermark {
      * @return 转化后的图像
      */
     private static Mat startDCT(Mat srcImg) {
+        if ((srcImg.cols() & 1) != 0) {
+            copyMakeBorder(srcImg, srcImg, 0, 0,
+                    0, 1, BORDER_CONSTANT, Scalar.all(0));
+        }
+        if ((srcImg.rows() & 1) != 0) {
+            copyMakeBorder(srcImg, srcImg, 0, 1,
+                    0, 0, BORDER_CONSTANT, Scalar.all(0));
+        }
         srcImg.convertTo(srcImg, CV_32F);
         dct(srcImg, srcImg);
         return srcImg;
@@ -259,12 +271,9 @@ public class BlindWatermark {
      * DCT逆变换
      *
      * @param comImg DCT后的图像
-     * @param planes 图像变量
      */
-    private static void inverseDCT(Mat comImg, MatVector planes) {
+    private static void inverseDCT(Mat comImg) {
         idct(comImg, comImg);
-        split(comImg, planes);
-        normalize(planes.get(0), comImg, 0, 255, NORM_MINMAX, CV_8UC3, null);
     }
 
     /**
