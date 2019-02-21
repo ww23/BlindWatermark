@@ -35,39 +35,39 @@
 ### Demo
 
     原图:
-![image](gakki-src.png)
+![image](image/gakki-src.png)
 
     加文字水印(DFT):
     java -jar BlindWatermark.jar encode -ft gakki-src.png mywife gakki-dft-text-ec.png
-![image](gakki-dft-text-ec.png)
+![image](image/gakki-dft-text-ec.png)
 
     文字水印解码(DFT):
     java -jar BlindWatermark.jar decode -ft gakki-dft-text-ec.png gakki-dft-text-dc.png
-![image](gakki-dft-text-dc.png)
+![image](image/gakki-dft-text-dc.png)
 
     加图片水印(DFT):
     java -jar BlindWatermark.jar encode -fi gakki-src.png watermark.png gakki-dft-img-ec.png
-![image](gakki-dft-img-ec.png)
+![image](image/gakki-dft-img-ec.png)
 
     图片水印解码(DFT):
     java -jar BlindWatermark.jar decode -fi gakki-src.png gakki-dft-img-ec.png gakki-dft-img-dc.png
-![image](gakki-dft-img-dc.png)
+![image](image/gakki-dft-img-dc.png)
 
     加文字水印(DCT):
     java -jar BlindWatermark.jar encode -ct gakki-src.png mywife gakki-dct-text-ec.jpg
-![image](gakki-dct-text-ec.jpg)
+![image](image/gakki-dct-text-ec.jpg)
 
     文字水印解码(DCT):
     java -jar BlindWatermark.jar decode -ct gakki-dct-text-ec.jpg gakki-dct-text-dc.jpg
-![image](gakki-dct-text-dc.jpg)
+![image](image/gakki-dct-text-dc.jpg)
 
     加图片水印(DCT):
     java -jar BlindWatermark.jar encode -ci gakki-src.png watermark.png gakki-dct-img-ec.jpg
-![image](gakki-dct-img-ec.jpg)
+![image](image/gakki-dct-img-ec.jpg)
 
     图片水印解码(DCT):
     java -jar BlindWatermark.jar decode -ci gakki-src.png gakki-dct-img-ec.jpg gakki-dct-img-dc.jpg
-![image](gakki-dct-img-dc.jpg)
+![image](image/gakki-dct-img-dc.jpg)
 
 ### Reference
 
