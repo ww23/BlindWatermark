@@ -1,20 +1,43 @@
-apply plugin: 'java'
-apply plugin: 'idea'
+plugins {
+    id 'java'
+    id 'idea'
+}
+
+group 'me.ww23.image'
+version 'v0.0.3'
 
 repositories {
-//    mavenCentral()
-    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    mavenCentral()
 }
 
 jar {
-    manifest { 
+    manifest {
         attributes 'Main-Class': 'me.ww23.image.BlindWatermark'
     }
     from {
-        (configurations.runtime).collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
 dependencies {
-    compile 'org.bytedeco:javacv-platform:1.4.2'
+    //all platforms
+    compile 'org.bytedeco.javacpp-presets:opencv-platform:4.0.1-1.4.4'
+
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4'
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:android-arm'
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:android-arm64'
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:android-x86'
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:android-x86_64'
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:ios-arm64'
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:ios-x86_64'
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:linux-armhf'
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:linux-ppc64le'
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:linux-x86'
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:linux-x86_64-gpu'
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:linux-x86_64'
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:macosx-x86_64-gpu'
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:macosx-x86_64'
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:windows-x86'
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:windows-x86_64-gpu'
+//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:windows-x86_64'
 }
