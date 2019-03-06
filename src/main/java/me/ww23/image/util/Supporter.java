@@ -16,20 +16,38 @@
 
 package me.ww23.image.util;
 
-import org.bytedeco.javacpp.opencv_core.Mat;
+import org.bytedeco.javacpp.opencv_highgui;
+
+import static org.bytedeco.javacpp.opencv_core.BORDER_CONSTANT;
+import static org.bytedeco.javacpp.opencv_core.Mat;
+import static org.bytedeco.javacpp.opencv_core.Scalar;
+import static org.bytedeco.javacpp.opencv_core.copyMakeBorder;
+import static org.bytedeco.javacpp.opencv_core.getOptimalDFTSize;
 
 import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
 
-public class Checker {
+public class Supporter {
 
     public static Mat read(String image, int type) {
         Mat src = imread(image, type);
-
         if (src.empty()) {
             System.out.println("File not found!");
             System.exit(-1);
         }
-
         return src;
+    }
+
+    public static void showMat(Mat mat) {
+        opencv_highgui.imshow(Supporter.class.toString(), mat);
+        opencv_highgui.waitKey(-1);
+    }
+
+    public static Mat optimalDft(Mat srcImg) {
+        Mat padded = new Mat();
+        int opRows = getOptimalDFTSize(srcImg.rows());
+        int opCols = getOptimalDFTSize(srcImg.cols());
+        copyMakeBorder(srcImg, padded, 0, opRows - srcImg.rows(),
+                0, opCols - srcImg.cols(), BORDER_CONSTANT, Scalar.all(0));
+        return padded;
     }
 }
