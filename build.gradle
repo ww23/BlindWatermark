@@ -40,4 +40,5 @@ dependencies {
 //    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:windows-x86'
 //    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:windows-x86_64-gpu'
 //    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:windows-x86_64'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.4.0'
 }
