@@ -16,7 +16,6 @@
 
 package me.ww23.image.converter;
 
-import static org.bytedeco.javacpp.opencv_core.CV_8U;
 import static org.bytedeco.javacpp.opencv_core.CV_8UC1;
 import static org.bytedeco.javacpp.opencv_core.CV_32F;
 import static org.bytedeco.javacpp.opencv_core.BORDER_CONSTANT;
@@ -30,12 +29,8 @@ import static org.bytedeco.javacpp.opencv_core.idct;
 import static org.bytedeco.javacpp.opencv_core.addWeighted;
 import static org.bytedeco.javacpp.opencv_core.inRange;
 import static org.bytedeco.javacpp.opencv_core.normalize;
-import static org.bytedeco.javacpp.opencv_core.subtract;
 
-import static org.bytedeco.javacpp.opencv_imgproc.COLOR_RGB2HSV;
-import static org.bytedeco.javacpp.opencv_imgproc.CV_FONT_HERSHEY_COMPLEX;
-import static org.bytedeco.javacpp.opencv_imgproc.putText;
-import static org.bytedeco.javacpp.opencv_imgproc.equalizeHist;
+import static org.bytedeco.javacpp.opencv_imgproc.*;
 
 public class DctConverter implements Converter {
 
@@ -65,7 +60,7 @@ public class DctConverter implements Converter {
                 new Point(com.size().width() >> 2, com.size().height() >> 2),
                 CV_FONT_HERSHEY_COMPLEX, 1.0,
                 new Scalar(2, 2, 2, 0), 2, 8, false);
-
+        //TODO: Support Non-ASCII
 //        byte[] temp = new byte[com.rows() * com.cols() * (int) com.elemSize()];
 //        com.data().get(temp);
 //
@@ -75,36 +70,27 @@ public class DctConverter implements Converter {
 //        byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
 //
 //        Mat mat = new Mat(com.rows(), com.cols(), com.type(), new BytePointer(pixels));
-//
-//        opencv_highgui.imshow("test", mat);
-//        opencv_highgui.waitKey(-1);
     }
 
     @Override
     public void addImageWatermark(Mat com, Mat watermark) {
+        Mat mask = new Mat();
+        inRange(watermark, new Mat(new Scalar(0, 0, 0, 0)), new Mat(new Scalar(0, 0, 0, 0)), mask);
+        Mat i2 = new Mat(watermark.size(), watermark.type(), new Scalar(2, 2, 2, 0));
+        i2.copyTo(watermark, mask);
         watermark.convertTo(watermark, CV_32F);
         copyMakeBorder(watermark, watermark,
                 com.rows() / 8, com.rows() - watermark.rows() - com.rows() / 8,
                 com.cols() / 8, com.cols() - watermark.cols() - com.cols() / 8,
                 BORDER_CONSTANT, Scalar.all(0));
-        addWeighted(watermark, 0.01, com, 1, 0.0, com);
+        addWeighted(watermark, 0.03, com, 1, 0.0, com);
     }
 
     @Override
-    public Mat showTextWatermark(Mat src) {
+    public Mat showWatermark(Mat src) {
         src.convertTo(src, COLOR_RGB2HSV);
-        Mat low = new Mat(new Scalar(1, 1, 1, 0));
-        Mat upp = new Mat(new Scalar(5, 5, 5, 0));
-        inRange(src, low, upp, src);
+        inRange(src, new Mat(new Scalar(0, 0, 0, 0)), new Mat(new Scalar(16, 16, 16, 0)), src);
         normalize(src, src, 0, 255, NORM_MINMAX, CV_8UC1, null);
         return src;
-    }
-
-    @Override
-    public Mat showImageWatermark(Mat src, Mat watermark) {
-        subtract(watermark, src, watermark);
-        watermark.convertTo(watermark, CV_8U);
-        equalizeHist(watermark, watermark);
-        return watermark;
     }
 }

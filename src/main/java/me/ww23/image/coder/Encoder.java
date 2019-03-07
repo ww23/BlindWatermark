@@ -17,14 +17,9 @@
 package me.ww23.image.coder;
 
 import me.ww23.image.converter.Converter;
-import me.ww23.image.util.Checker;
+import me.ww23.image.util.Supporter;
 
-import static org.bytedeco.javacpp.opencv_core.CV_8S;
-import static org.bytedeco.javacpp.opencv_core.Mat;
-import static org.bytedeco.javacpp.opencv_core.MatVector;
-import static org.bytedeco.javacpp.opencv_core.Rect;
-import static org.bytedeco.javacpp.opencv_core.split;
-import static org.bytedeco.javacpp.opencv_core.merge;
+import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgcodecs.imwrite;
 
 public abstract class Encoder {
@@ -35,8 +30,16 @@ public abstract class Encoder {
         this.converter = converter;
     }
 
+    public Converter getConverter() {
+        return converter;
+    }
+
+    public void setConverter(Converter converter) {
+        this.converter = converter;
+    }
+
     public void encode(String image, String watermark, String output) {
-        Mat src = Checker.read(image, CV_8S);
+        Mat src = Supporter.read(image, CV_8S);
 
         MatVector color = new MatVector(3);
         split(src, color);

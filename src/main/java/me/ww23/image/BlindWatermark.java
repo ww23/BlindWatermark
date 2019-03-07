@@ -59,17 +59,8 @@ public class BlindWatermark {
                 encoder.encode(args[2], args[3], args[4]);
                 break;
             case "decode":
-                Decoder decoder;
-                if (isImage) {
-                    decoder = new ImageDecoder(converter);
-                } else {
-                    decoder = new TextDecoder(converter);
-                }
-                if (args.length == 5) {
-                    decoder.decode(args[2], args[3], args[4]);
-                } else {
-                    decoder.decode(args[2], args[3]);
-                }
+                Decoder decoder = new Decoder(converter);
+                decoder.decode(args[2], args[3]);
                 break;
             default:
                 help();
@@ -79,10 +70,8 @@ public class BlindWatermark {
     private static void help() {
         System.out.println("Usage: java -jar BlindWatermark.jar <commands> [args...] \n" +
                 "   commands: \n" +
-                "       encode <option> <image-src> <watermark-text> <image-encoded(text)>\n" +
-                "       encode <option> <image-src> <watermark-image> <image-encoded(image)>\n" +
-                "       decode <option> <image-encode(text)> <image-decode>\n" +
-                "       decode <option> <image-src> <image-encoded(image)> <image-decode>\n" +
+                "       encode <option> <input> <watermark> <output>\n" +
+                "       decode <option> <input> <output>\n" +
                 "   options: \n" +
                 "       -c discrete cosine transform\n" +
                 "       -f discrete fourier transform\n" +

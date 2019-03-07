@@ -17,15 +17,28 @@
 package me.ww23.image.coder;
 
 import me.ww23.image.converter.Converter;
+import me.ww23.image.util.Supporter;
 
-public abstract class Decoder {
+import static org.bytedeco.javacpp.opencv_core.CV_8U;
+import static org.bytedeco.javacpp.opencv_imgcodecs.imwrite;
 
-    Converter converter;
+public class Decoder {
 
-    Decoder(Converter converter) {
+    private Converter converter;
+
+    public Decoder(Converter converter) {
         this.converter = converter;
     }
 
-    public abstract void decode(String image, String watermark);
-    public abstract void decode(String image, String watermark, String output);
+    public Converter getConverter() {
+        return converter;
+    }
+
+    public void setConverter(Converter converter) {
+        this.converter = converter;
+    }
+
+    public void decode(String image, String output) {
+        imwrite(output, this.converter.showWatermark(this.converter.start(Supporter.read(image, CV_8U))));
+    }
 }

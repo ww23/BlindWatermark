@@ -16,6 +16,8 @@
 
 package me.ww23.image.converter;
 
+import me.ww23.image.util.Supporter;
+
 import static org.bytedeco.javacpp.opencv_core.CV_8UC3;
 import static org.bytedeco.javacpp.opencv_core.CV_8UC1;
 import static org.bytedeco.javacpp.opencv_core.CV_32F;
@@ -37,7 +39,7 @@ import static org.bytedeco.javacpp.opencv_core.addWeighted;
 import static org.bytedeco.javacpp.opencv_core.magnitude;
 import static org.bytedeco.javacpp.opencv_core.add;
 import static org.bytedeco.javacpp.opencv_core.log;
-import static org.bytedeco.javacpp.opencv_core.subtract;
+import static org.bytedeco.javacpp.opencv_core.inRange;
 
 import static org.bytedeco.javacpp.opencv_imgproc.CV_FONT_HERSHEY_COMPLEX;
 import static org.bytedeco.javacpp.opencv_imgproc.putText;
@@ -68,11 +70,11 @@ public class DftConverter implements Converter {
     @Override
     public void addTextWatermark(Mat com, String watermark) {
         Scalar s = new Scalar(0, 0, 0, 0);
-        Point p = new Point(com.size().width() / 3, com.size().height() / 3);
+        Point p = new Point(com.rows() / 3, com.cols() / 3);
 
         putText(com, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.0, s, 3,
                 8, false);
-        //旋转图片
+
         flip(com, com, -1);
 
         putText(com, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.0, s, 3,
@@ -85,9 +87,9 @@ public class DftConverter implements Converter {
         MatVector planes = new MatVector(2);
         watermark.convertTo(watermark, CV_32F);
         Mat temp = new Mat();
-
-        copyMakeBorder(watermark, watermark, 0, com.rows() / 2 - watermark.rows(),
-                0, com.cols() - watermark.cols(), BORDER_CONSTANT, Scalar.all(0));
+        int center = (com.cols() - watermark.cols()) >> 1;
+        copyMakeBorder(watermark, watermark, 0, (com.rows() >> 1) - watermark.rows(), center, center,
+                BORDER_CONSTANT, Scalar.all(0));
         planes.put(0, watermark);
         flip(watermark, temp, -1);
         planes.put(1, temp);
@@ -96,14 +98,16 @@ public class DftConverter implements Converter {
         planes.put(0, watermark);
         planes.put(1, watermark);
         merge(planes, watermark);
-        addWeighted(watermark, 0.5, com, 1, 0.0, com);
+        addWeighted(watermark, 8, com, 1, 0.0, com);
+
+        split(com, planes);
+        Supporter.showMat(planes.get(0));
     }
 
     @Override
-    public Mat showTextWatermark(Mat src) {
+    public Mat showWatermark(Mat src) {
         MatVector newPlanes = new MatVector(2);
         Mat mag = new Mat();
-
         split(src, newPlanes);
         magnitude(newPlanes.get(0), newPlanes.get(1), mag);
         add(Mat.ones(mag.size(), CV_32F).asMat(), mag, mag);
@@ -111,13 +115,5 @@ public class DftConverter implements Converter {
         mag.convertTo(mag, CV_8UC1);
         normalize(mag, mag, 0, 255, NORM_MINMAX, CV_8UC1, null);
         return mag;
-    }
-
-    @Override
-    public Mat showImageWatermark(Mat src, Mat watermark) {
-        subtract(watermark, src, watermark);
-        MatVector newPlanes = new MatVector(2);
-        split(watermark, newPlanes);
-        return newPlanes.get(0);
     }
 }

@@ -23,6 +23,5 @@ public interface Converter {
     void inverse(Mat com);
     void addTextWatermark(Mat com, String watermark);
     void addImageWatermark(Mat com, Mat watermark);
-    Mat showTextWatermark(Mat src);
-    Mat showImageWatermark(Mat src, Mat watermark);
+    Mat showWatermark(Mat src);
 }

@@ -18,10 +18,10 @@ package me.ww23.image.coder;
 
 import me.ww23.image.converter.Converter;
 
-import static org.bytedeco.javacpp.opencv_core.CV_8U;
-
-import me.ww23.image.util.Checker;
+import me.ww23.image.util.Supporter;
 import org.bytedeco.javacpp.opencv_core.Mat;
+
+import static org.bytedeco.javacpp.opencv_core.CV_8U;
 
 public class ImageEncoder extends Encoder {
 
@@ -31,6 +31,6 @@ public class ImageEncoder extends Encoder {
 
     @Override
     public void addWatermark(Mat com, String watermark) {
-        this.converter.addImageWatermark(com, Checker.read(watermark, CV_8U));
+        this.converter.addImageWatermark(com, Supporter.read(watermark, CV_8U));
     }
 }

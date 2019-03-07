@@ -2,25 +2,20 @@
 # BlindWatermark
 [![Build Status](https://travis-ci.org/ww23/BlindWatermark.svg?branch=master)](https://travis-ci.org/ww23/BlindWatermark)  
 
-在图片上加肉眼很难分辨的水印
+在图片上加隐藏的水印
 
 * 原理
      * Encode:  
      原图 --- 变换 ---> 变换域 + 水印 --- 逆变换 ---> 带水印图
-     * Decode(文字水印):  
+     * Decode:  
      带水印图 --- 变换 ---> 变换域
-     * Decode(图片水印):  
-     原图 --- 变换 --> 原图变换域  
-     带水印图 --- 变换 ---> 变换域 - 原图变换域
 
 ### Usage
     
     Usage: java -jar BlindWatermark.jar <commands> [args...]
         commands:
-            encode <option> <image-src> <watermark-text> <image-encoded(text)>
-            encode <option> <image-src> <watermark-image> <image-encoded(image)>
-            decode <option> <image-encode(text)> <image-decode>
-            decode <option> <image-src> <image-encoded(image)> <image-decode>
+            encode <option> <input> <watermark> <output>
+            decode <option> <input> <output>
         options:
             -c discrete cosine transform
             -f discrete fourier transform
@@ -28,6 +23,7 @@
             -t text  watermark
         example:
             encode -ft input.png watermark output.png
+            decode -fi input.png output.png
 ### Build
 
 	gradle build
@@ -38,7 +34,7 @@
 ![image](image/gakki-src.png)
 
     加文字水印(DFT):
-    java -jar BlindWatermark.jar encode -ft gakki-src.png mywife gakki-dft-text-ec.png
+    java -jar BlindWatermark.jar encode -ft gakki-src.png test gakki-dft-text-ec.png
 ![image](image/gakki-dft-text-ec.png)
 
     文字水印解码(DFT):
@@ -50,11 +46,11 @@
 ![image](image/gakki-dft-img-ec.png)
 
     图片水印解码(DFT):
-    java -jar BlindWatermark.jar decode -fi gakki-src.png gakki-dft-img-ec.png gakki-dft-img-dc.png
+    java -jar BlindWatermark.jar decode -fi gakki-dft-img-ec.png gakki-dft-img-dc.png
 ![image](image/gakki-dft-img-dc.png)
 
     加文字水印(DCT):
-    java -jar BlindWatermark.jar encode -ct gakki-src.png mywife gakki-dct-text-ec.jpg
+    java -jar BlindWatermark.jar encode -ct gakki-src.png test gakki-dct-text-ec.jpg
 ![image](image/gakki-dct-text-ec.jpg)
 
     文字水印解码(DCT):
@@ -66,7 +62,7 @@
 ![image](image/gakki-dct-img-ec.jpg)
 
     图片水印解码(DCT):
-    java -jar BlindWatermark.jar decode -ci gakki-src.png gakki-dct-img-ec.jpg gakki-dct-img-dc.jpg
+    java -jar BlindWatermark.jar decode -ci gakki-dct-img-ec.jpg gakki-dct-img-dc.jpg
 ![image](image/gakki-dct-img-dc.jpg)
 
 ### Reference
@@ -75,7 +71,7 @@
 
 ### License
 
-    Copyright 2018 ww23(https://github.com/ww23/BlindWatermark).
+    Copyright 2019 ww23(https://github.com/ww23/BlindWatermark).
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
