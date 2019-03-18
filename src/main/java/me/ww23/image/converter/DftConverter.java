@@ -16,8 +16,6 @@
 
 package me.ww23.image.converter;
 
-import me.ww23.image.util.Supporter;
-
 import static org.bytedeco.javacpp.opencv_core.CV_8UC3;
 import static org.bytedeco.javacpp.opencv_core.CV_8UC1;
 import static org.bytedeco.javacpp.opencv_core.CV_32F;
@@ -39,12 +37,14 @@ import static org.bytedeco.javacpp.opencv_core.addWeighted;
 import static org.bytedeco.javacpp.opencv_core.magnitude;
 import static org.bytedeco.javacpp.opencv_core.add;
 import static org.bytedeco.javacpp.opencv_core.log;
-import static org.bytedeco.javacpp.opencv_core.inRange;
 
 import static org.bytedeco.javacpp.opencv_imgproc.CV_FONT_HERSHEY_COMPLEX;
 import static org.bytedeco.javacpp.opencv_imgproc.putText;
 
 
+/**
+ * @author ww23
+ */
 public class DftConverter implements Converter {
 
     @Override
@@ -101,7 +101,6 @@ public class DftConverter implements Converter {
         addWeighted(watermark, 8, com, 1, 0.0, com);
 
         split(com, planes);
-        Supporter.showMat(planes.get(0));
     }
 
     @Override

@@ -18,6 +18,9 @@ package me.ww23.image.converter;
 
 import static org.bytedeco.javacpp.opencv_core.Mat;
 
+/**
+ * @author ww23
+ */
 public interface Converter {
     Mat start(Mat src);
     void inverse(Mat com);

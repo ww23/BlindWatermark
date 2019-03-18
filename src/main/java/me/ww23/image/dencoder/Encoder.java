@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package me.ww23.image.coder;
+package me.ww23.image.dencoder;
 
 import me.ww23.image.converter.Converter;
-import me.ww23.image.util.Supporter;
+import me.ww23.image.util.Utils;
 
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgcodecs.imwrite;
 
+/**
+ * @author ww23
+ */
 public abstract class Encoder {
 
     Converter converter;
@@ -39,7 +42,7 @@ public abstract class Encoder {
     }
 
     public void encode(String image, String watermark, String output) {
-        Mat src = Supporter.read(image, CV_8S);
+        Mat src = Utils.read(image, CV_8S);
 
         MatVector color = new MatVector(3);
         split(src, color);

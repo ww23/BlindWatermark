@@ -14,31 +14,26 @@
  * limitations under the License.
  */
 
-package me.ww23.image.coder;
+package me.ww23.image.dencoder;
 
 import me.ww23.image.converter.Converter;
-import me.ww23.image.util.Supporter;
+
+import me.ww23.image.util.Utils;
+import org.bytedeco.javacpp.opencv_core.Mat;
 
 import static org.bytedeco.javacpp.opencv_core.CV_8U;
-import static org.bytedeco.javacpp.opencv_imgcodecs.imwrite;
 
-public class Decoder {
+/**
+ * @author ww23
+ */
+public class ImageEncoder extends Encoder {
 
-    private Converter converter;
-
-    public Decoder(Converter converter) {
-        this.converter = converter;
+    public ImageEncoder(Converter converter) {
+        super(converter);
     }
 
-    public Converter getConverter() {
-        return converter;
-    }
-
-    public void setConverter(Converter converter) {
-        this.converter = converter;
-    }
-
-    public void decode(String image, String output) {
-        imwrite(output, this.converter.showWatermark(this.converter.start(Supporter.read(image, CV_8U))));
+    @Override
+    public void addWatermark(Mat com, String watermark) {
+        this.converter.addImageWatermark(com, Utils.read(watermark, CV_8U));
     }
 }

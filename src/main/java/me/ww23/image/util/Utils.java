@@ -26,7 +26,10 @@ import static org.bytedeco.javacpp.opencv_core.getOptimalDFTSize;
 
 import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
 
-public class Supporter {
+/**
+ * @author ww23
+ */
+public class Utils {
 
     public static Mat read(String image, int type) {
         Mat src = imread(image, type);
@@ -38,7 +41,7 @@ public class Supporter {
     }
 
     public static void showMat(Mat mat) {
-        opencv_highgui.imshow(Supporter.class.toString(), mat);
+        opencv_highgui.imshow(Utils.class.toString(), mat);
         opencv_highgui.waitKey(-1);
     }
 

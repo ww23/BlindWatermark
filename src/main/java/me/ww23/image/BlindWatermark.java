@@ -16,13 +16,21 @@
 
 package me.ww23.image;
 
-import me.ww23.image.coder.*;
+import me.ww23.image.dencoder.*;
 import me.ww23.image.converter.Converter;
 import me.ww23.image.converter.DctConverter;
 import me.ww23.image.converter.DftConverter;
 
 
+/**
+ * @author ww23
+ */
 public class BlindWatermark {
+
+    private static final String FOURIER = "f";
+    private static final String COSINE = "c";
+    private static final String IMAGE = "i";
+    private static final String TEXT = "t";
 
     public static void main(String[] args) {
 
@@ -30,19 +38,12 @@ public class BlindWatermark {
             help();
         }
 
-        boolean isImage = false;
         Converter converter = null;
         String option = args[1].substring(1);
 
-        if (option.contains("i")) {
-            isImage = true;
-        } else if (!option.contains("t")) {
-            help();
-        }
-
-        if (option.contains("f")) {
+        if (option.contains(FOURIER)) {
             converter = new DftConverter();
-        } else if (option.contains("c")) {
+        } else if (option.contains(COSINE)) {
             converter = new DctConverter();
         } else {
             help();
@@ -50,12 +51,15 @@ public class BlindWatermark {
 
         switch (args[0]) {
             case "encode":
-                Encoder encoder;
-                if (isImage) {
+                Encoder encoder = null;
+                if (option.contains(IMAGE)) {
                     encoder = new ImageEncoder(converter);
-                } else {
+                } else if (option.contains(TEXT)) {
                     encoder = new TextEncoder(converter);
+                } else {
+                    help();
                 }
+                assert encoder != null;
                 encoder.encode(args[2], args[3], args[4]);
                 break;
             case "decode":
@@ -72,13 +76,17 @@ public class BlindWatermark {
                 "   commands: \n" +
                 "       encode <option> <input> <watermark> <output>\n" +
                 "       decode <option> <input> <output>\n" +
-                "   options: \n" +
+                "   encode options: \n" +
                 "       -c discrete cosine transform\n" +
                 "       -f discrete fourier transform\n" +
                 "       -i image watermark\n" +
                 "       -t text  watermark\n" +
+                "   decode options: \n" +
+                "       -c discrete cosine transform\n" +
+                "       -f discrete fourier transform\n" +
                 "   example: \n" +
-                "       encode -ft foo.png test bar.png"
+                "       encode -ft foo.png test bar.png" +
+                "       decode -f  foo.png bar.png"
         );
         System.exit(-1);
     }

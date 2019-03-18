@@ -30,8 +30,13 @@ import static org.bytedeco.javacpp.opencv_core.addWeighted;
 import static org.bytedeco.javacpp.opencv_core.inRange;
 import static org.bytedeco.javacpp.opencv_core.normalize;
 
-import static org.bytedeco.javacpp.opencv_imgproc.*;
+import static org.bytedeco.javacpp.opencv_imgproc.putText;
+import static org.bytedeco.javacpp.opencv_imgproc.CV_FONT_HERSHEY_COMPLEX;
+import static org.bytedeco.javacpp.opencv_imgproc.COLOR_RGB2HSV;
 
+/**
+ * @author ww23
+ */
 public class DctConverter implements Converter {
 
     @Override
@@ -58,7 +63,7 @@ public class DctConverter implements Converter {
     public void addTextWatermark(Mat com, String watermark) {
         putText(com, watermark,
                 new Point(com.size().width() >> 2, com.size().height() >> 2),
-                CV_FONT_HERSHEY_COMPLEX, 1.0,
+                CV_FONT_HERSHEY_COMPLEX, 2.0,
                 new Scalar(2, 2, 2, 0), 2, 8, false);
         //TODO: Support Non-ASCII
 //        byte[] temp = new byte[com.rows() * com.cols() * (int) com.elemSize()];
@@ -80,8 +85,8 @@ public class DctConverter implements Converter {
         i2.copyTo(watermark, mask);
         watermark.convertTo(watermark, CV_32F);
         copyMakeBorder(watermark, watermark,
-                com.rows() / 8, com.rows() - watermark.rows() - com.rows() / 8,
-                com.cols() / 8, com.cols() - watermark.cols() - com.cols() / 8,
+                (com.rows() - watermark.rows()) >> 1, (com.rows() - watermark.rows()) >> 1,
+                (com.cols() - watermark.cols()) >> 1, (com.cols() - watermark.cols()) >> 1,
                 BORDER_CONSTANT, Scalar.all(0));
         addWeighted(watermark, 0.03, com, 1, 0.0, com);
     }
