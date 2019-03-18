@@ -16,7 +16,7 @@
 
 package me.ww23.image;
 
-import me.ww23.image.coder.*;
+import me.ww23.image.dencoder.*;
 import me.ww23.image.converter.Converter;
 import me.ww23.image.converter.DctConverter;
 import me.ww23.image.converter.DftConverter;

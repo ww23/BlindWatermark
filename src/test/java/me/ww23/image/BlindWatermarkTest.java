@@ -16,10 +16,10 @@
 
 package me.ww23.image;
 
-import me.ww23.image.coder.Decoder;
-import me.ww23.image.coder.Encoder;
-import me.ww23.image.coder.ImageEncoder;
-import me.ww23.image.coder.TextEncoder;
+import me.ww23.image.dencoder.Decoder;
+import me.ww23.image.dencoder.Encoder;
+import me.ww23.image.dencoder.ImageEncoder;
+import me.ww23.image.dencoder.TextEncoder;
 import me.ww23.image.converter.Converter;
 import me.ww23.image.converter.DctConverter;
 import me.ww23.image.converter.DftConverter;

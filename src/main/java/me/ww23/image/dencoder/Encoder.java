@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.ww23.image.coder;
+package me.ww23.image.dencoder;
 
 import me.ww23.image.converter.Converter;
 import me.ww23.image.util.Utils;

@@ -41,7 +41,7 @@
 ![image](image/gakki-dft-text-ec.png)
 
     文字水印解码(DFT):
-    java -jar BlindWatermark.jar decode -ft gakki-dft-text-ec.png gakki-dft-text-dc.png
+    java -jar BlindWatermark.jar decode -f gakki-dft-text-ec.png gakki-dft-text-dc.png
 ![image](image/gakki-dft-text-dc.png)
 
     加图片水印(DFT):
@@ -49,7 +49,7 @@
 ![image](image/gakki-dft-img-ec.png)
 
     图片水印解码(DFT):
-    java -jar BlindWatermark.jar decode -fi gakki-dft-img-ec.png gakki-dft-img-dc.png
+    java -jar BlindWatermark.jar decode -f gakki-dft-img-ec.png gakki-dft-img-dc.png
 ![image](image/gakki-dft-img-dc.png)
 
     加文字水印(DCT):
@@ -57,7 +57,7 @@
 ![image](image/gakki-dct-text-ec.jpg)
 
     文字水印解码(DCT):
-    java -jar BlindWatermark.jar decode -ct gakki-dct-text-ec.jpg gakki-dct-text-dc.jpg
+    java -jar BlindWatermark.jar decode -c gakki-dct-text-ec.jpg gakki-dct-text-dc.jpg
 ![image](image/gakki-dct-text-dc.jpg)
 
     加图片水印(DCT):
@@ -65,7 +65,7 @@
 ![image](image/gakki-dct-img-ec.jpg)
 
     图片水印解码(DCT):
-    java -jar BlindWatermark.jar decode -ci gakki-dct-img-ec.jpg gakki-dct-img-dc.jpg
+    java -jar BlindWatermark.jar decode -c gakki-dct-img-ec.jpg gakki-dct-img-dc.jpg
 ![image](image/gakki-dct-img-dc.jpg)
 
 ### Reference
