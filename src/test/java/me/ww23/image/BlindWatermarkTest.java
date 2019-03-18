@@ -23,7 +23,7 @@ import me.ww23.image.coder.TextEncoder;
 import me.ww23.image.converter.Converter;
 import me.ww23.image.converter.DctConverter;
 import me.ww23.image.converter.DftConverter;
-import me.ww23.image.util.Supporter;
+import me.ww23.image.util.Utils;
 import org.bytedeco.javacpp.opencv_core;
 import org.junit.jupiter.api.Test;
 
@@ -59,7 +59,7 @@ class BlindWatermarkTest {
 
     @Test
     void speedGray() {
-        opencv_core.Mat src = Supporter.read("image/gakki-src.png", CV_8U);
+        opencv_core.Mat src = Utils.read("image/gakki-src.png", CV_8U);
         converterDct.addTextWatermark(converterDct.start(src), "test");
         converterDct.inverse(src);
     }

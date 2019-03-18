@@ -30,8 +30,13 @@ import static org.bytedeco.javacpp.opencv_core.addWeighted;
 import static org.bytedeco.javacpp.opencv_core.inRange;
 import static org.bytedeco.javacpp.opencv_core.normalize;
 
-import static org.bytedeco.javacpp.opencv_imgproc.*;
+import static org.bytedeco.javacpp.opencv_imgproc.putText;
+import static org.bytedeco.javacpp.opencv_imgproc.CV_FONT_HERSHEY_COMPLEX;
+import static org.bytedeco.javacpp.opencv_imgproc.COLOR_RGB2HSV;
 
+/**
+ * @author ww23
+ */
 public class DctConverter implements Converter {
 
     @Override

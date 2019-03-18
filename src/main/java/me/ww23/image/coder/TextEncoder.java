@@ -19,6 +19,9 @@ package me.ww23.image.coder;
 import me.ww23.image.converter.Converter;
 import org.bytedeco.javacpp.opencv_core;
 
+/**
+ * @author ww23
+ */
 public class TextEncoder extends Encoder {
 
     public TextEncoder(Converter converter) {

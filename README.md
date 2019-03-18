@@ -16,11 +16,14 @@
         commands:
             encode <option> <input> <watermark> <output>
             decode <option> <input> <output>
-        options:
+        encode options:
             -c discrete cosine transform
             -f discrete fourier transform
             -i image watermark
             -t text  watermark
+        decode options:
+            -c discrete cosine transform
+            -f discrete fourier transform
         example:
             encode -ft input.png watermark output.png
             decode -fi input.png output.png

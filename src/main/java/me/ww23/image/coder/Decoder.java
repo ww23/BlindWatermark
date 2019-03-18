@@ -17,11 +17,14 @@
 package me.ww23.image.coder;
 
 import me.ww23.image.converter.Converter;
-import me.ww23.image.util.Supporter;
+import me.ww23.image.util.Utils;
 
 import static org.bytedeco.javacpp.opencv_core.CV_8U;
 import static org.bytedeco.javacpp.opencv_imgcodecs.imwrite;
 
+/**
+ * @author ww23
+ */
 public class Decoder {
 
     private Converter converter;
@@ -39,6 +42,6 @@ public class Decoder {
     }
 
     public void decode(String image, String output) {
-        imwrite(output, this.converter.showWatermark(this.converter.start(Supporter.read(image, CV_8U))));
+        imwrite(output, this.converter.showWatermark(this.converter.start(Utils.read(image, CV_8U))));
     }
 }
