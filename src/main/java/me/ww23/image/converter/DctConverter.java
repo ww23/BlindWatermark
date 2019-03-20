@@ -62,7 +62,7 @@ public class DctConverter implements Converter {
     @Override
     public void addTextWatermark(Mat com, String watermark) {
         putText(com, watermark,
-                new Point(com.size().width() >> 2, com.size().height() >> 2),
+                new Point(com.cols() >> 2, com.rows() >> 2),
                 CV_FONT_HERSHEY_COMPLEX, 2.0,
                 new Scalar(2, 2, 2, 0), 2, 8, false);
         //TODO: Support Non-ASCII

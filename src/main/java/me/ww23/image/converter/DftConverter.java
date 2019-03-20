@@ -70,7 +70,7 @@ public class DftConverter implements Converter {
     @Override
     public void addTextWatermark(Mat com, String watermark) {
         Scalar s = new Scalar(0, 0, 0, 0);
-        Point p = new Point(com.rows() / 3, com.cols() / 3);
+        Point p = new Point(com.cols() / 3, com.rows() / 3);
 
         putText(com, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.0, s, 3,
                 8, false);
