@@ -16,6 +16,8 @@
 
 package me.ww23.image.converter;
 
+import me.ww23.image.util.Utils;
+
 import static org.bytedeco.javacpp.opencv_core.CV_8UC1;
 import static org.bytedeco.javacpp.opencv_core.CV_32F;
 import static org.bytedeco.javacpp.opencv_core.BORDER_CONSTANT;
@@ -61,20 +63,14 @@ public class DctConverter implements Converter {
 
     @Override
     public void addTextWatermark(Mat com, String watermark) {
-        putText(com, watermark,
-                new Point(com.cols() >> 2, com.rows() >> 2),
-                CV_FONT_HERSHEY_COMPLEX, 2.0,
-                new Scalar(2, 2, 2, 0), 2, 8, false);
-        //TODO: Support Non-ASCII
-//        byte[] temp = new byte[com.rows() * com.cols() * (int) com.elemSize()];
-//        com.data().get(temp);
-//
-//        BufferedImage bufferedImage = new BufferedImage(com.cols(), com.rows(), BufferedImage.TYPE_BYTE_GRAY);
-//        bufferedImage.getRaster().setDataElements(0, 0, com.cols(), com.rows(), temp);
-//
-//        byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
-//
-//        Mat mat = new Mat(com.rows(), com.cols(), com.type(), new BytePointer(pixels));
+        if (Utils.isAscii(watermark)) {
+            putText(com, watermark,
+                    new Point(com.cols() >> 2, com.rows() >> 2),
+                    CV_FONT_HERSHEY_COMPLEX, 2.0,
+                    new Scalar(2, 2, 2, 0), 2, 8, false);
+        } else {
+            this.addImageWatermark(com, Utils.drawNonAscii(watermark));
+        }
     }
 
     @Override

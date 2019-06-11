@@ -16,14 +16,24 @@
 
 package me.ww23.image.util;
 
+import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.opencv_highgui;
+import org.opencv.core.CvType;
+import sun.font.FontDesignMetrics;
 
-import static org.bytedeco.javacpp.opencv_core.BORDER_CONSTANT;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+
 import static org.bytedeco.javacpp.opencv_core.Mat;
-import static org.bytedeco.javacpp.opencv_core.Scalar;
-import static org.bytedeco.javacpp.opencv_core.copyMakeBorder;
 import static org.bytedeco.javacpp.opencv_core.getOptimalDFTSize;
-
+import static org.bytedeco.javacpp.opencv_core.copyMakeBorder;
+import static org.bytedeco.javacpp.opencv_core.BORDER_CONSTANT;
+import static org.bytedeco.javacpp.opencv_core.Scalar;
 import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
 
 /**
@@ -40,7 +50,7 @@ public class Utils {
         return src;
     }
 
-    public static void showMat(Mat mat) {
+    public static void show(Mat mat) {
         opencv_highgui.imshow(Utils.class.toString(), mat);
         opencv_highgui.waitKey(-1);
     }
@@ -53,4 +63,29 @@ public class Utils {
                 0, opCols - srcImg.cols(), BORDER_CONSTANT, Scalar.all(0));
         return padded;
     }
+
+    public static boolean isAscii(String str) {
+        return str.matches("^[ -~]+$");
+    }
+
+    public static Mat drawNonAscii(String watermark) {
+        Font font = new Font("Default", Font.BOLD, 64);
+        FontDesignMetrics metrics = FontDesignMetrics.getMetrics(font);
+        int width = 0;
+        for (int i = 0; i < watermark.length(); i++) {
+            width += metrics.charWidth(watermark.charAt(i));
+        }
+        int height = metrics.getHeight();
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+        Graphics2D graphics = bufferedImage.createGraphics();
+        graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+        graphics.setFont(font);
+        graphics.setColor(Color.WHITE);
+        graphics.drawString(watermark, 0, metrics.getAscent());
+        graphics.dispose();
+        byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
+        return new Mat(bufferedImage.getHeight(), bufferedImage.getWidth(), CvType.CV_8U, new BytePointer(pixels));
+    }
+
 }

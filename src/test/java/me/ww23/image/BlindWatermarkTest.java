@@ -41,7 +41,7 @@ class BlindWatermarkTest {
         Decoder decoder = new Decoder(converter);
         decoder.decode("image/gakki-dct-img-ec.jpg", "image/gakki-dct-img-dc.jpg");
         encoder = new TextEncoder(converter);
-        encoder.encode("image/gakki-src.png", "test", "image/gakki-dct-text-ec.jpg");
+        encoder.encode("image/gakki-src.png", "测试test", "image/gakki-dct-text-ec.jpg");
         decoder.decode("image/gakki-dct-text-ec.jpg", "image/gakki-dct-text-dc.jpg");
     }
 
@@ -53,14 +53,15 @@ class BlindWatermarkTest {
         Decoder decoder = new Decoder(converter);
         decoder.decode("image/gakki-dft-img-ec.png", "image/gakki-dft-img-dc.png");
         encoder = new TextEncoder(converter);
-        encoder.encode("image/gakki-src.png", "test", "image/gakki-dft-text-ec.png");
+        encoder.encode("image/gakki-src.png", "测试test", "image/gakki-dft-text-ec.png");
         decoder.decode("image/gakki-dft-text-ec.png", "image/gakki-dft-text-dc.png");
     }
 
     @Test
-    void speedGray() {
+    void speedTest() {
         opencv_core.Mat src = Utils.read("image/gakki-src.png", CV_8U);
         converterDct.addTextWatermark(converterDct.start(src), "test");
         converterDct.inverse(src);
     }
+
 }

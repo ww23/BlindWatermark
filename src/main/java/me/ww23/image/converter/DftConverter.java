@@ -16,6 +16,8 @@
 
 package me.ww23.image.converter;
 
+import me.ww23.image.util.Utils;
+
 import static org.bytedeco.javacpp.opencv_core.CV_8UC3;
 import static org.bytedeco.javacpp.opencv_core.CV_8UC1;
 import static org.bytedeco.javacpp.opencv_core.CV_32F;
@@ -69,17 +71,21 @@ public class DftConverter implements Converter {
 
     @Override
     public void addTextWatermark(Mat com, String watermark) {
-        Scalar s = new Scalar(0, 0, 0, 0);
-        Point p = new Point(com.cols() / 3, com.rows() / 3);
+        if (Utils.isAscii(watermark)) {
+            Scalar s = new Scalar(0, 0, 0, 0);
+            Point p = new Point(com.cols() / 3, com.rows() / 3);
 
-        putText(com, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.0, s, 3,
-                8, false);
+            putText(com, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.0, s, 3,
+                    8, false);
 
-        flip(com, com, -1);
+            flip(com, com, -1);
 
-        putText(com, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.0, s, 3,
-                8, false);
-        flip(com, com, -1);
+            putText(com, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.0, s, 3,
+                    8, false);
+            flip(com, com, -1);
+        } else {
+            this.addImageWatermark(com, Utils.drawNonAscii(watermark));
+        }
     }
 
     @Override
