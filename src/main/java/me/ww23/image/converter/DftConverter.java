@@ -71,21 +71,14 @@ public class DftConverter implements Converter {
 
     @Override
     public void addTextWatermark(Mat com, String watermark) {
-        if (Utils.isAscii(watermark)) {
-            Scalar s = new Scalar(0, 0, 0, 0);
-            Point p = new Point(com.cols() / 3, com.rows() / 3);
-
-            putText(com, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.0, s, 3,
-                    8, false);
-
-            flip(com, com, -1);
-
-            putText(com, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.0, s, 3,
-                    8, false);
-            flip(com, com, -1);
-        } else {
-            this.addImageWatermark(com, Utils.drawNonAscii(watermark));
-        }
+        Scalar s = new Scalar(0, 0, 0, 0);
+        Point p = new Point(com.cols() / 3, com.rows() / 3);
+        putText(com, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.0, s, 3,
+                8, false);
+        flip(com, com, -1);
+        putText(com, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.0, s, 3,
+                8, false);
+        flip(com, com, -1);
     }
 
     @Override
@@ -93,9 +86,9 @@ public class DftConverter implements Converter {
         MatVector planes = new MatVector(2);
         watermark.convertTo(watermark, CV_32F);
         Mat temp = new Mat();
-        int center = (com.cols() - watermark.cols()) >> 1;
-        copyMakeBorder(watermark, watermark, 0, (com.rows() >> 1) - watermark.rows(), center, center,
-                BORDER_CONSTANT, Scalar.all(0));
+        int col = (com.cols() - watermark.cols()) >> 1;
+        int row = ((com.rows() >> 1) - watermark.rows()) >> 1;
+        copyMakeBorder(watermark, watermark, row, row, col, col, BORDER_CONSTANT, Scalar.all(0));
         planes.put(0, watermark);
         flip(watermark, temp, -1);
         planes.put(1, temp);
@@ -104,6 +97,7 @@ public class DftConverter implements Converter {
         planes.put(0, watermark);
         planes.put(1, watermark);
         merge(planes, watermark);
+        Utils.fixSize(watermark, com);
         addWeighted(watermark, 8, com, 1, 0.0, com);
 
         split(com, planes);

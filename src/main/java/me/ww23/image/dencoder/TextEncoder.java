@@ -17,6 +17,7 @@
 package me.ww23.image.dencoder;
 
 import me.ww23.image.converter.Converter;
+import me.ww23.image.util.Utils;
 import org.bytedeco.javacpp.opencv_core;
 
 /**
@@ -30,6 +31,10 @@ public class TextEncoder extends Encoder {
 
     @Override
     public void addWatermark(opencv_core.Mat com, String watermark) {
-        this.converter.addTextWatermark(com, watermark);
+        if (Utils.isAscii(watermark)) {
+            this.converter.addTextWatermark(com, watermark);
+        } else {
+            this.converter.addImageWatermark(com, Utils.drawNonAscii(watermark));
+        }
     }
 }

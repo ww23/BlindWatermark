@@ -44,12 +44,10 @@ public class DctConverter implements Converter {
     @Override
     public Mat start(Mat src) {
         if ((src.cols() & 1) != 0) {
-            copyMakeBorder(src, src, 0, 0,
-                    0, 1, BORDER_CONSTANT, Scalar.all(0));
+            copyMakeBorder(src, src, 0, 0, 0, 1, BORDER_CONSTANT, Scalar.all(0));
         }
         if ((src.rows() & 1) != 0) {
-            copyMakeBorder(src, src, 0, 1,
-                    0, 0, BORDER_CONSTANT, Scalar.all(0));
+            copyMakeBorder(src, src, 0, 1, 0, 0, BORDER_CONSTANT, Scalar.all(0));
         }
         src.convertTo(src, CV_32F);
         dct(src, src);
@@ -63,14 +61,10 @@ public class DctConverter implements Converter {
 
     @Override
     public void addTextWatermark(Mat com, String watermark) {
-        if (Utils.isAscii(watermark)) {
-            putText(com, watermark,
-                    new Point(com.cols() >> 2, com.rows() >> 2),
-                    CV_FONT_HERSHEY_COMPLEX, 2.0,
-                    new Scalar(2, 2, 2, 0), 2, 8, false);
-        } else {
-            this.addImageWatermark(com, Utils.drawNonAscii(watermark));
-        }
+        putText(com, watermark,
+                new Point(com.cols() >> 2, com.rows() >> 2),
+                CV_FONT_HERSHEY_COMPLEX, 2.0,
+                new Scalar(2, 2, 2, 0), 2, 8, false);
     }
 
     @Override
@@ -80,10 +74,10 @@ public class DctConverter implements Converter {
         Mat i2 = new Mat(watermark.size(), watermark.type(), new Scalar(2, 2, 2, 0));
         i2.copyTo(watermark, mask);
         watermark.convertTo(watermark, CV_32F);
-        copyMakeBorder(watermark, watermark,
-                (com.rows() - watermark.rows()) >> 1, (com.rows() - watermark.rows()) >> 1,
-                (com.cols() - watermark.cols()) >> 1, (com.cols() - watermark.cols()) >> 1,
-                BORDER_CONSTANT, Scalar.all(0));
+        int row = (com.rows() - watermark.rows()) >> 1;
+        int col = (com.cols() - watermark.cols()) >> 1;
+        copyMakeBorder(watermark, watermark, row, row, col, col, BORDER_CONSTANT, Scalar.all(0));
+        Utils.fixSize(watermark, com);
         addWeighted(watermark, 0.03, com, 1, 0.0, com);
     }
 

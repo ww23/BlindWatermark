@@ -17,8 +17,8 @@
 package me.ww23.image.util;
 
 import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_highgui;
-import org.opencv.core.CvType;
 import sun.font.FontDesignMetrics;
 
 import java.awt.Font;
@@ -34,6 +34,8 @@ import static org.bytedeco.javacpp.opencv_core.getOptimalDFTSize;
 import static org.bytedeco.javacpp.opencv_core.copyMakeBorder;
 import static org.bytedeco.javacpp.opencv_core.BORDER_CONSTANT;
 import static org.bytedeco.javacpp.opencv_core.Scalar;
+import static org.bytedeco.javacpp.opencv_core.CV_8U;
+import static org.bytedeco.javacpp.opencv_core.Rect;
 import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
 
 /**
@@ -69,7 +71,7 @@ public class Utils {
     }
 
     public static Mat drawNonAscii(String watermark) {
-        Font font = new Font("Default", Font.BOLD, 64);
+        Font font = new Font("Default", Font.PLAIN, 64);
         FontDesignMetrics metrics = FontDesignMetrics.getMetrics(font);
         int width = 0;
         for (int i = 0; i < watermark.length(); i++) {
@@ -85,7 +87,18 @@ public class Utils {
         graphics.drawString(watermark, 0, metrics.getAscent());
         graphics.dispose();
         byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
-        return new Mat(bufferedImage.getHeight(), bufferedImage.getWidth(), CvType.CV_8U, new BytePointer(pixels));
+        return new Mat(bufferedImage.getHeight(), bufferedImage.getWidth(), CV_8U, new BytePointer(pixels));
+    }
+
+    public static void fixSize(Mat src, Mat mirror) {
+        if (src.rows() != mirror.rows()) {
+            copyMakeBorder(src, src, 0, mirror.rows() - src.rows(),
+                    0, 0, BORDER_CONSTANT, Scalar.all(0));
+        }
+        if (src.cols() != mirror.cols()) {
+            copyMakeBorder(src, src, 0, 0,
+                    0, mirror.cols() - src.cols(), BORDER_CONSTANT, Scalar.all(0));
+        }
     }
 
 }

@@ -16,32 +16,31 @@
 
 package me.ww23.image;
 
+import me.ww23.image.converter.Converter;
+import me.ww23.image.converter.DctConverter;
+import me.ww23.image.converter.DftConverter;
 import me.ww23.image.dencoder.Decoder;
 import me.ww23.image.dencoder.Encoder;
 import me.ww23.image.dencoder.ImageEncoder;
 import me.ww23.image.dencoder.TextEncoder;
-import me.ww23.image.converter.Converter;
-import me.ww23.image.converter.DctConverter;
-import me.ww23.image.converter.DftConverter;
-import me.ww23.image.util.Utils;
-import org.bytedeco.javacpp.opencv_core;
 import org.junit.jupiter.api.Test;
-
-import static org.bytedeco.javacpp.opencv_core.*;
 
 class BlindWatermarkTest {
 
     private Converter converterDct = new DctConverter();
+    private static final String SRC = "image/gakki-src.png";
+    private static final String TEXT_WM = "测试test";
+    private static final String IMAGE_WM = "image/watermark.png";
 
     @Test
     void dct() {
         Converter converter = new DctConverter();
         Encoder encoder = new ImageEncoder(converter);
-        encoder.encode("image/gakki-src.png", "image/watermark.png", "image/gakki-dct-img-ec.jpg");
+        encoder.encode(SRC, IMAGE_WM, "image/gakki-dct-img-ec.jpg");
         Decoder decoder = new Decoder(converter);
         decoder.decode("image/gakki-dct-img-ec.jpg", "image/gakki-dct-img-dc.jpg");
         encoder = new TextEncoder(converter);
-        encoder.encode("image/gakki-src.png", "测试test", "image/gakki-dct-text-ec.jpg");
+        encoder.encode(SRC, TEXT_WM, "image/gakki-dct-text-ec.jpg");
         decoder.decode("image/gakki-dct-text-ec.jpg", "image/gakki-dct-text-dc.jpg");
     }
 
@@ -49,19 +48,12 @@ class BlindWatermarkTest {
     void dft() {
         Converter converter = new DftConverter();
         Encoder encoder = new ImageEncoder(converter);
-        encoder.encode("image/gakki-src.png", "image/watermark.png", "image/gakki-dft-img-ec.png");
+        encoder.encode(SRC, IMAGE_WM, "image/gakki-dft-img-ec.png");
         Decoder decoder = new Decoder(converter);
         decoder.decode("image/gakki-dft-img-ec.png", "image/gakki-dft-img-dc.png");
         encoder = new TextEncoder(converter);
-        encoder.encode("image/gakki-src.png", "测试test", "image/gakki-dft-text-ec.png");
+        encoder.encode(SRC, TEXT_WM, "image/gakki-dft-text-ec.png");
         decoder.decode("image/gakki-dft-text-ec.png", "image/gakki-dft-text-dc.png");
-    }
-
-    @Test
-    void speedTest() {
-        opencv_core.Mat src = Utils.read("image/gakki-src.png", CV_8U);
-        converterDct.addTextWatermark(converterDct.start(src), "test");
-        converterDct.inverse(src);
     }
 
 }
