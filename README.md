@@ -36,24 +36,8 @@
     原图:
 ![image](image/gakki-src.png)
 
-    加文字水印(DFT):
-    java -jar BlindWatermark.jar encode -ft gakki-src.png test gakki-dft-text-ec.png
-![image](image/gakki-dft-text-ec.png)
-
-    文字水印解码(DFT):
-    java -jar BlindWatermark.jar decode -f gakki-dft-text-ec.png gakki-dft-text-dc.png
-![image](image/gakki-dft-text-dc.png)
-
-    加图片水印(DFT):
-    java -jar BlindWatermark.jar encode -fi gakki-src.png watermark.png gakki-dft-img-ec.png
-![image](image/gakki-dft-img-ec.png)
-
-    图片水印解码(DFT):
-    java -jar BlindWatermark.jar decode -f gakki-dft-img-ec.png gakki-dft-img-dc.png
-![image](image/gakki-dft-img-dc.png)
-
     加文字水印(DCT):
-    java -jar BlindWatermark.jar encode -ct gakki-src.png test gakki-dct-text-ec.jpg
+    java -jar BlindWatermark.jar encode -ct gakki-src.png 测试test gakki-dct-text-ec.jpg
 ![image](image/gakki-dct-text-ec.jpg)
 
     文字水印解码(DCT):
@@ -68,22 +52,28 @@
     java -jar BlindWatermark.jar decode -c gakki-dct-img-ec.jpg gakki-dct-img-dc.jpg
 ![image](image/gakki-dct-img-dc.jpg)
 
+    加文字水印(DFT):
+    java -jar BlindWatermark.jar encode -ft gakki-src.png 测试test gakki-dft-text-ec.png
+![image](image/gakki-dft-text-ec.png)
+
+    文字水印解码(DFT):
+    java -jar BlindWatermark.jar decode -f gakki-dft-text-ec.png gakki-dft-text-dc.png
+![image](image/gakki-dft-text-dc.png)
+
+    加图片水印(DFT):
+    java -jar BlindWatermark.jar encode -fi gakki-src.png watermark.png gakki-dft-img-ec.png
+![image](image/gakki-dft-img-ec.png)
+
+    图片水印解码(DFT):
+    java -jar BlindWatermark.jar decode -f gakki-dft-img-ec.png gakki-dft-img-dc.png
+![image](image/gakki-dft-img-dc.png)
+
+### Notice
+DFT 输出图片格式必须要是 PNG
+
 ### Reference
 
 * [OpenCV  Discrete Fourier Transform](https://docs.opencv.org/3.4/d8/d01/tutorial_discrete_fourier_transform.html)
 
 ### License
-
-    Copyright 2019 ww23(https://github.com/ww23/BlindWatermark).
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-         http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+[Apache-2.0](https://github.com/ww23/BlindWatermark/blob/master/LICENSE)
