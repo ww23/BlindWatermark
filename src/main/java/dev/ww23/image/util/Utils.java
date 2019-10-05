@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package me.ww23.image.util;
+package dev.ww23.image.util;
 
 import org.bytedeco.javacpp.BytePointer;
-import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_highgui;
 import sun.font.FontDesignMetrics;
 
@@ -35,7 +34,6 @@ import static org.bytedeco.javacpp.opencv_core.copyMakeBorder;
 import static org.bytedeco.javacpp.opencv_core.BORDER_CONSTANT;
 import static org.bytedeco.javacpp.opencv_core.Scalar;
 import static org.bytedeco.javacpp.opencv_core.CV_8U;
-import static org.bytedeco.javacpp.opencv_core.Rect;
 import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
 
 /**

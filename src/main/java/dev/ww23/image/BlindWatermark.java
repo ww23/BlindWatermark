@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package me.ww23.image;
+package dev.ww23.image;
 
-import me.ww23.image.dencoder.*;
-import me.ww23.image.converter.Converter;
-import me.ww23.image.converter.DctConverter;
-import me.ww23.image.converter.DftConverter;
+import dev.ww23.image.converter.Converter;
+import dev.ww23.image.converter.DftConverter;
+import dev.ww23.image.dencoder.Decoder;
+import dev.ww23.image.dencoder.Encoder;
+import dev.ww23.image.dencoder.ImageEncoder;
+import dev.ww23.image.dencoder.TextEncoder;
+import dev.ww23.image.converter.DctConverter;
 
 
 /**

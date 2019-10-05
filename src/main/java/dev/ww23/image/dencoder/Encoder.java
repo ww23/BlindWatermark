@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package me.ww23.image.dencoder;
+package dev.ww23.image.dencoder;
 
-import me.ww23.image.converter.Converter;
-import me.ww23.image.util.Utils;
+import dev.ww23.image.converter.Converter;
+import dev.ww23.image.util.Utils;
 
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgcodecs.imwrite;

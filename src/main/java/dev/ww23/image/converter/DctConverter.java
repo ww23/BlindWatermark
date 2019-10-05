@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package me.ww23.image.converter;
+package dev.ww23.image.converter;
 
-import me.ww23.image.util.Utils;
+import dev.ww23.image.util.Utils;
 
 import static org.bytedeco.javacpp.opencv_core.CV_8UC1;
 import static org.bytedeco.javacpp.opencv_core.CV_32F;
