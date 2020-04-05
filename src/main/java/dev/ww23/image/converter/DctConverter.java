@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 ww23(https://github.com/ww23/BlindWatermark).
+ * Copyright (c) 2020 ww23(https://github.com/ww23/BlindWatermark).
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,24 +17,23 @@
 package dev.ww23.image.converter;
 
 import dev.ww23.image.util.Utils;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 
-import static org.bytedeco.javacpp.opencv_core.CV_8UC1;
-import static org.bytedeco.javacpp.opencv_core.CV_32F;
-import static org.bytedeco.javacpp.opencv_core.BORDER_CONSTANT;
-import static org.bytedeco.javacpp.opencv_core.NORM_MINMAX;
-import static org.bytedeco.javacpp.opencv_core.Mat;
-import static org.bytedeco.javacpp.opencv_core.Scalar;
-import static org.bytedeco.javacpp.opencv_core.Point;
-import static org.bytedeco.javacpp.opencv_core.copyMakeBorder;
-import static org.bytedeco.javacpp.opencv_core.dct;
-import static org.bytedeco.javacpp.opencv_core.idct;
-import static org.bytedeco.javacpp.opencv_core.addWeighted;
-import static org.bytedeco.javacpp.opencv_core.inRange;
-import static org.bytedeco.javacpp.opencv_core.normalize;
-
-import static org.bytedeco.javacpp.opencv_imgproc.putText;
-import static org.bytedeco.javacpp.opencv_imgproc.CV_FONT_HERSHEY_COMPLEX;
-import static org.bytedeco.javacpp.opencv_imgproc.COLOR_RGB2HSV;
+import static org.opencv.core.Core.BORDER_CONSTANT;
+import static org.opencv.core.Core.NORM_MINMAX;
+import static org.opencv.core.Core.addWeighted;
+import static org.opencv.core.Core.copyMakeBorder;
+import static org.opencv.core.Core.dct;
+import static org.opencv.core.Core.idct;
+import static org.opencv.core.Core.inRange;
+import static org.opencv.core.Core.normalize;
+import static org.opencv.core.CvType.CV_32F;
+import static org.opencv.core.CvType.CV_8UC1;
+import static org.opencv.imgproc.Imgproc.COLOR_RGB2HSV;
+import static org.opencv.imgproc.Imgproc.FONT_HERSHEY_COMPLEX;
+import static org.opencv.imgproc.Imgproc.putText;
 
 /**
  * @author ww23
@@ -63,14 +62,14 @@ public class DctConverter implements Converter {
     public void addTextWatermark(Mat com, String watermark) {
         putText(com, watermark,
                 new Point(com.cols() >> 2, com.rows() >> 2),
-                CV_FONT_HERSHEY_COMPLEX, 2.0,
+                FONT_HERSHEY_COMPLEX, 2.0,
                 new Scalar(2, 2, 2, 0), 2, 8, false);
     }
 
     @Override
     public void addImageWatermark(Mat com, Mat watermark) {
         Mat mask = new Mat();
-        inRange(watermark, new Mat(new Scalar(0, 0, 0, 0)), new Mat(new Scalar(0, 0, 0, 0)), mask);
+        inRange(watermark, new Scalar(0, 0, 0, 0), new Scalar(0, 0, 0, 0), mask);
         Mat i2 = new Mat(watermark.size(), watermark.type(), new Scalar(2, 2, 2, 0));
         i2.copyTo(watermark, mask);
         watermark.convertTo(watermark, CV_32F);
@@ -84,8 +83,8 @@ public class DctConverter implements Converter {
     @Override
     public Mat showWatermark(Mat src) {
         src.convertTo(src, COLOR_RGB2HSV);
-        inRange(src, new Mat(new Scalar(0, 0, 0, 0)), new Mat(new Scalar(16, 16, 16, 0)), src);
-        normalize(src, src, 0, 255, NORM_MINMAX, CV_8UC1, null);
+        inRange(src, new Scalar(0, 0, 0, 0), new Scalar(16, 16, 16, 0), src);
+        normalize(src, src, 0, 255, NORM_MINMAX, CV_8UC1);
         return src;
     }
 }

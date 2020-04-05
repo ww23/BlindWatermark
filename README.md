@@ -1,6 +1,5 @@
 
-# BlindWatermark
-[![Build Status](https://travis-ci.org/ww23/BlindWatermark.svg?branch=master)](https://travis-ci.org/ww23/BlindWatermark)  
+# BlindWatermark 
 
 在图片上加隐藏的水印
 
@@ -12,21 +11,22 @@
 
 ### Usage
     
-    Usage: java -jar BlindWatermark.jar <commands> [args...]
+    Usage: java -jar BlindWatermark.jar <commands>
         commands:
-            encode <option> <input> <watermark> <output>
-            decode <option> <input> <output>
+            encode <option> <original image> <watermark> <embedded image>
+            decode <option> <original image> <embedded image>
         encode options:
             -c discrete cosine transform
-            -f discrete fourier transform
+            -f discrete fourier transform (Deprecated)
             -i image watermark
             -t text  watermark
         decode options:
             -c discrete cosine transform
-            -f discrete fourier transform
+            -f discrete fourier transform (Deprecated)
         example:
-            encode -ft input.png watermark output.png
-            decode -fi input.png output.png
+            encode -ct input.png watermark output.png
+            decode -c  input.png output.png
+
 ### Build
 
 	gradle build
@@ -36,44 +36,21 @@
     原图:
 ![image](image/gakki-src.png)
 
-    加文字水印(DCT):
+    加文字水印:
     java -jar BlindWatermark.jar encode -ct gakki-src.png 测试test gakki-dct-text-ec.jpg
 ![image](image/gakki-dct-text-ec.jpg)
 
-    文字水印解码(DCT):
+    文字水印解码:
     java -jar BlindWatermark.jar decode -c gakki-dct-text-ec.jpg gakki-dct-text-dc.jpg
 ![image](image/gakki-dct-text-dc.jpg)
 
-    加图片水印(DCT):
+    加图片水印:
     java -jar BlindWatermark.jar encode -ci gakki-src.png watermark.png gakki-dct-img-ec.jpg
 ![image](image/gakki-dct-img-ec.jpg)
 
-    图片水印解码(DCT):
+    图片水印解码:
     java -jar BlindWatermark.jar decode -c gakki-dct-img-ec.jpg gakki-dct-img-dc.jpg
 ![image](image/gakki-dct-img-dc.jpg)
-
-    加文字水印(DFT):
-    java -jar BlindWatermark.jar encode -ft gakki-src.png 测试test gakki-dft-text-ec.png
-![image](image/gakki-dft-text-ec.png)
-
-    文字水印解码(DFT):
-    java -jar BlindWatermark.jar decode -f gakki-dft-text-ec.png gakki-dft-text-dc.png
-![image](image/gakki-dft-text-dc.png)
-
-    加图片水印(DFT):
-    java -jar BlindWatermark.jar encode -fi gakki-src.png watermark.png gakki-dft-img-ec.png
-![image](image/gakki-dft-img-ec.png)
-
-    图片水印解码(DFT):
-    java -jar BlindWatermark.jar decode -f gakki-dft-img-ec.png gakki-dft-img-dc.png
-![image](image/gakki-dft-img-dc.png)
-
-### Notice
-DFT 输出图片格式必须要是 PNG
-
-### Reference
-
-* [OpenCV  Discrete Fourier Transform](https://docs.opencv.org/3.4/d8/d01/tutorial_discrete_fourier_transform.html)
 
 ### License
 [Apache-2.0](https://github.com/ww23/BlindWatermark/blob/master/LICENSE)

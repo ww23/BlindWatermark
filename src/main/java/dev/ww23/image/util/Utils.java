@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 ww23(https://github.com/ww23/BlindWatermark).
+ * Copyright (c) 2020 ww23(https://github.com/ww23/BlindWatermark).
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,25 +16,26 @@
 
 package dev.ww23.image.util;
 
-import org.bytedeco.javacpp.BytePointer;
-import org.bytedeco.javacpp.opencv_highgui;
-import sun.font.FontDesignMetrics;
+import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
 
+import java.awt.AlphaComposite;
+import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 
-import static org.bytedeco.javacpp.opencv_core.Mat;
-import static org.bytedeco.javacpp.opencv_core.getOptimalDFTSize;
-import static org.bytedeco.javacpp.opencv_core.copyMakeBorder;
-import static org.bytedeco.javacpp.opencv_core.BORDER_CONSTANT;
-import static org.bytedeco.javacpp.opencv_core.Scalar;
-import static org.bytedeco.javacpp.opencv_core.CV_8U;
-import static org.bytedeco.javacpp.opencv_imgcodecs.imread;
+import static org.opencv.core.Core.BORDER_CONSTANT;
+import static org.opencv.core.Core.copyMakeBorder;
+import static org.opencv.core.Core.getOptimalDFTSize;
+import static org.opencv.core.CvType.CV_8U;
+import static org.opencv.highgui.HighGui.imshow;
+import static org.opencv.highgui.HighGui.waitKey;
+import static org.opencv.imgcodecs.Imgcodecs.imread;
 
 /**
  * @author ww23
@@ -51,8 +52,8 @@ public class Utils {
     }
 
     public static void show(Mat mat) {
-        opencv_highgui.imshow(Utils.class.toString(), mat);
-        opencv_highgui.waitKey(-1);
+        imshow(Utils.class.toString(), mat);
+        waitKey(0);
     }
 
     public static Mat optimalDft(Mat srcImg) {
@@ -65,16 +66,13 @@ public class Utils {
     }
 
     public static boolean isAscii(String str) {
-        return str.matches("^[ -~]+$");
+        return "^[ -~]+$".matches(str);
     }
 
     public static Mat drawNonAscii(String watermark) {
         Font font = new Font("Default", Font.PLAIN, 64);
-        FontDesignMetrics metrics = FontDesignMetrics.getMetrics(font);
-        int width = 0;
-        for (int i = 0; i < watermark.length(); i++) {
-            width += metrics.charWidth(watermark.charAt(i));
-        }
+        FontMetrics metrics = new Canvas().getFontMetrics(font);
+        int width = metrics.stringWidth(watermark);
         int height = metrics.getHeight();
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
         Graphics2D graphics = bufferedImage.createGraphics();
@@ -85,7 +83,9 @@ public class Utils {
         graphics.drawString(watermark, 0, metrics.getAscent());
         graphics.dispose();
         byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
-        return new Mat(bufferedImage.getHeight(), bufferedImage.getWidth(), CV_8U, new BytePointer(pixels));
+        Mat res = new Mat(bufferedImage.getHeight(), bufferedImage.getWidth(), CV_8U);
+        res.put(0, 0, pixels);
+        return res;
     }
 
     public static void fixSize(Mat src, Mat mirror) {

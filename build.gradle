@@ -3,42 +3,50 @@ plugins {
     id 'idea'
 }
 
-group 'me.ww23.image'
+group 'dev.ww23.image'
 version 'v0.0.3'
 
 repositories {
-    mavenCentral()
+    maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+//    mavenCentral()
 }
 
 jar {
     manifest {
-        attributes 'Main-Class': 'me.ww23.image.BlindWatermark'
+        attributes 'Main-Class': 'dev.ww23.image.BlindWatermark'
     }
     from {
-        configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
 }
 
 dependencies {
     //all platforms
-    compile 'org.bytedeco.javacpp-presets:opencv-platform:4.0.1-1.4.4'
-
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4'
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:android-arm'
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:android-arm64'
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:android-x86'
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:android-x86_64'
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:ios-arm64'
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:ios-x86_64'
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:linux-armhf'
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:linux-ppc64le'
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:linux-x86'
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:linux-x86_64-gpu'
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:linux-x86_64'
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:macosx-x86_64-gpu'
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:macosx-x86_64'
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:windows-x86'
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:windows-x86_64-gpu'
-//    compile 'org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:windows-x86_64'
+    compile 'org.bytedeco:opencv-platform:4.1.2-1.5.2'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2:android-arm'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2:android-arm64'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2:android-x86'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2:android-x86_64'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2:ios-arm64'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2:ios-x86_64'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2:linux-armhf'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2:linux-ppc64le'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2:linux-x86'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2:linux-x86_64-gpu'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2:linux-x86_64'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2:macosx-x86_64-gpu'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2:macosx-x86_64'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2:windows-x86'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2:windows-x86_64-gpu'
+//    compile 'org.bytedeco:opencv:4.1.2-1.5.2:windows-x86_64'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.4.0'
 }

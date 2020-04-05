@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 ww23(https://github.com/ww23/BlindWatermark).
+ * Copyright (c) 2020 ww23(https://github.com/ww23/BlindWatermark).
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import dev.ww23.image.dencoder.Encoder;
 import dev.ww23.image.dencoder.ImageEncoder;
 import dev.ww23.image.dencoder.TextEncoder;
 import dev.ww23.image.converter.DctConverter;
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.opencv.opencv_java;
 
 
 /**
@@ -36,6 +38,8 @@ public class BlindWatermark {
     private static final String TEXT = "t";
 
     public static void main(String[] args) {
+
+        Loader.load(opencv_java.class);
 
         if (args.length < 4) {
             help();
@@ -75,21 +79,21 @@ public class BlindWatermark {
     }
 
     private static void help() {
-        System.out.println("Usage: java -jar BlindWatermark.jar <commands> [args...] \n" +
+        System.out.println("Usage: java -jar BlindWatermark.jar <commands>\n" +
                 "   commands: \n" +
-                "       encode <option> <input> <watermark> <output>\n" +
-                "       decode <option> <input> <output>\n" +
+                "       encode <option> <original image> <watermark> <embedded image>\n" +
+                "       decode <option> <original image> <embedded image>\n" +
                 "   encode options: \n" +
                 "       -c discrete cosine transform\n" +
-                "       -f discrete fourier transform\n" +
+                "       -f discrete fourier transform (Deprecated)\n" +
                 "       -i image watermark\n" +
                 "       -t text  watermark\n" +
                 "   decode options: \n" +
                 "       -c discrete cosine transform\n" +
-                "       -f discrete fourier transform\n" +
+                "       -f discrete fourier transform (Deprecated)\n" +
                 "   example: \n" +
-                "       encode -ft foo.png test bar.png" +
-                "       decode -f  foo.png bar.png"
+                "       encode -ct foo.png test bar.png" +
+                "       decode -c  foo.png bar.png"
         );
         System.exit(-1);
     }

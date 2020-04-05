@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 ww23(https://github.com/ww23/BlindWatermark).
+ * Copyright (c) 2020 ww23(https://github.com/ww23/BlindWatermark).
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ package dev.ww23.image.dencoder;
 import dev.ww23.image.converter.Converter;
 
 import dev.ww23.image.util.Utils;
-import org.bytedeco.javacpp.opencv_core.Mat;
+import org.opencv.core.Mat;
 
-import static org.bytedeco.javacpp.opencv_core.CV_8U;
+import static org.opencv.core.CvType.CV_8U;
 
 /**
  * @author ww23

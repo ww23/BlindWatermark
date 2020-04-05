@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 ww23(https://github.com/ww23/BlindWatermark).
+ * Copyright (c) 2020 ww23(https://github.com/ww23/BlindWatermark).
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package dev.ww23.image.dencoder;
 
 import dev.ww23.image.converter.Converter;
 import dev.ww23.image.util.Utils;
-import org.bytedeco.javacpp.opencv_core;
+import org.opencv.core.Mat;
 
 /**
  * @author ww23
@@ -30,7 +30,7 @@ public class TextEncoder extends Encoder {
     }
 
     @Override
-    public void addWatermark(opencv_core.Mat com, String watermark) {
+    public void addWatermark(Mat com, String watermark) {
         if (Utils.isAscii(watermark)) {
             this.converter.addTextWatermark(com, watermark);
         } else {

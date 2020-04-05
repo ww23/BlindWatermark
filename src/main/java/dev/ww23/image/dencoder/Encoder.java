@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 ww23(https://github.com/ww23/BlindWatermark).
+ * Copyright (c) 2020 ww23(https://github.com/ww23/BlindWatermark).
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,9 +18,16 @@ package dev.ww23.image.dencoder;
 
 import dev.ww23.image.converter.Converter;
 import dev.ww23.image.util.Utils;
+import org.opencv.core.Mat;
+import org.opencv.core.Rect;
 
-import static org.bytedeco.javacpp.opencv_core.*;
-import static org.bytedeco.javacpp.opencv_imgcodecs.imwrite;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.opencv.core.Core.merge;
+import static org.opencv.core.Core.split;
+import static org.opencv.core.CvType.CV_8S;
+import static org.opencv.imgcodecs.Imgcodecs.imwrite;
 
 /**
  * @author ww23
@@ -44,25 +51,26 @@ public abstract class Encoder {
     public void encode(String image, String watermark, String output) {
         Mat src = Utils.read(image, CV_8S);
 
-        MatVector color = new MatVector(3);
-        split(src, color);
+        List<Mat> channel = new ArrayList<>(3);
+        List<Mat> newChannel = new ArrayList<>(3);
+        split(src, channel);
 
-        for (int i = 0; i < color.size(); i++) {
-            Mat com = this.converter.start(color.get(i));
+        for (int i = 0; i < 3; i++) {
+            Mat com = this.converter.start(channel.get(i)).clone();
             this.addWatermark(com, watermark);
             this.converter.inverse(com);
-            color.put(i, com);
+            newChannel.add(i, com);
         }
 
         Mat res = new Mat();
-        merge(color, res);
+        merge(newChannel, res);
 
         if (res.rows() != src.rows() || res.cols() != src.cols()) {
-            res = new Mat(res, new Rect(0, 0, src.size().width(), src.size().height()));
+            res = new Mat(res, new Rect(0, 0, src.width(), src.height()));
         }
 
         imwrite(output, res);
     }
 
-    protected abstract void addWatermark(Mat com, String watermark);
+    public abstract void addWatermark(Mat com, String watermark);
 }

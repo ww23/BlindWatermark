@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 ww23(https://github.com/ww23/BlindWatermark).
+ * Copyright (c) 2020 ww23(https://github.com/ww23/BlindWatermark).
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,45 +17,48 @@
 package dev.ww23.image.converter;
 
 import dev.ww23.image.util.Utils;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 
-import static org.bytedeco.javacpp.opencv_core.CV_8UC3;
-import static org.bytedeco.javacpp.opencv_core.CV_8UC1;
-import static org.bytedeco.javacpp.opencv_core.CV_32F;
-import static org.bytedeco.javacpp.opencv_core.NORM_MINMAX;
-import static org.bytedeco.javacpp.opencv_core.BORDER_CONSTANT;
-import static org.bytedeco.javacpp.opencv_core.Mat;
-import static org.bytedeco.javacpp.opencv_core.MatVector;
-import static org.bytedeco.javacpp.opencv_core.Scalar;
-import static org.bytedeco.javacpp.opencv_core.Point;
-import static org.bytedeco.javacpp.opencv_core.merge;
-import static org.bytedeco.javacpp.opencv_core.split;
-import static org.bytedeco.javacpp.opencv_core.dft;
-import static org.bytedeco.javacpp.opencv_core.idft;
-import static org.bytedeco.javacpp.opencv_core.normalize;
-import static org.bytedeco.javacpp.opencv_core.copyMakeBorder;
-import static org.bytedeco.javacpp.opencv_core.flip;
-import static org.bytedeco.javacpp.opencv_core.vconcat;
-import static org.bytedeco.javacpp.opencv_core.addWeighted;
-import static org.bytedeco.javacpp.opencv_core.magnitude;
-import static org.bytedeco.javacpp.opencv_core.add;
-import static org.bytedeco.javacpp.opencv_core.log;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import static org.bytedeco.javacpp.opencv_imgproc.CV_FONT_HERSHEY_COMPLEX;
-import static org.bytedeco.javacpp.opencv_imgproc.putText;
+import static org.opencv.core.Core.BORDER_CONSTANT;
+import static org.opencv.core.Core.NORM_MINMAX;
+import static org.opencv.core.Core.add;
+import static org.opencv.core.Core.addWeighted;
+import static org.opencv.core.Core.copyMakeBorder;
+import static org.opencv.core.Core.dft;
+import static org.opencv.core.Core.flip;
+import static org.opencv.core.Core.idft;
+import static org.opencv.core.Core.log;
+import static org.opencv.core.Core.magnitude;
+import static org.opencv.core.Core.merge;
+import static org.opencv.core.Core.normalize;
+import static org.opencv.core.Core.split;
+import static org.opencv.core.Core.vconcat;
+import static org.opencv.core.CvType.CV_32F;
+import static org.opencv.core.CvType.CV_8UC1;
+import static org.opencv.core.CvType.CV_8UC3;
+import static org.opencv.imgproc.Imgproc.FONT_HERSHEY_COMPLEX;
+import static org.opencv.imgproc.Imgproc.putText;
 
 
 /**
  * @author ww23
  */
+@Deprecated
 public class DftConverter implements Converter {
 
     @Override
     public Mat start(Mat src) {
         src.convertTo(src, CV_32F);
-        MatVector planes = new MatVector(2);
+        List<Mat> planes = new ArrayList<>(2);
         Mat com = new Mat();
-        planes.put(0, src);
-        planes.put(1, Mat.zeros(src.size(), CV_32F).asMat());
+        planes.add(0, src);
+        planes.add(1, Mat.zeros(src.size(), CV_32F));
         merge(planes, com);
         dft(com, com);
         return com;
@@ -63,40 +66,41 @@ public class DftConverter implements Converter {
 
     @Override
     public void inverse(Mat com) {
-        MatVector planes = new MatVector(2);
+        List<Mat> planes = new ArrayList<>(2);
         idft(com, com);
         split(com, planes);
-        normalize(planes.get(0), com, 0, 255, NORM_MINMAX, CV_8UC3, null);
+        normalize(planes.get(0), com, 0, 255, NORM_MINMAX, CV_8UC3);
     }
 
     @Override
     public void addTextWatermark(Mat com, String watermark) {
         Scalar s = new Scalar(0, 0, 0, 0);
         Point p = new Point(com.cols() / 3, com.rows() / 3);
-        putText(com, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.0, s, 3,
+        putText(com, watermark, p, FONT_HERSHEY_COMPLEX, 1.0, s, 3,
                 8, false);
         flip(com, com, -1);
-        putText(com, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.0, s, 3,
+        putText(com, watermark, p, FONT_HERSHEY_COMPLEX, 1.0, s, 3,
                 8, false);
         flip(com, com, -1);
     }
 
     @Override
     public void addImageWatermark(Mat com, Mat watermark) {
-        MatVector planes = new MatVector(2);
-        watermark.convertTo(watermark, CV_32F);
+        List<Mat> planes = new ArrayList<>(2);
+        List<Mat> newPlanes = new ArrayList<>(2);
         Mat temp = new Mat();
         int col = (com.cols() - watermark.cols()) >> 1;
         int row = ((com.rows() >> 1) - watermark.rows()) >> 1;
+        watermark.convertTo(watermark, CV_32F);
         copyMakeBorder(watermark, watermark, row, row, col, col, BORDER_CONSTANT, Scalar.all(0));
-        planes.put(0, watermark);
+        planes.add(0, watermark);
         flip(watermark, temp, -1);
-        planes.put(1, temp);
+        planes.add(1, temp);
         vconcat(planes, watermark);
 
-        planes.put(0, watermark);
-        planes.put(1, watermark);
-        merge(planes, watermark);
+        newPlanes.add(0, watermark);
+        newPlanes.add(1, watermark);
+        merge(newPlanes, watermark);
         Utils.fixSize(watermark, com);
         addWeighted(watermark, 8, com, 1, 0.0, com);
 
@@ -105,14 +109,14 @@ public class DftConverter implements Converter {
 
     @Override
     public Mat showWatermark(Mat src) {
-        MatVector newPlanes = new MatVector(2);
+        List<Mat> newPlanes = new ArrayList<>(2);
         Mat mag = new Mat();
         split(src, newPlanes);
         magnitude(newPlanes.get(0), newPlanes.get(1), mag);
-        add(Mat.ones(mag.size(), CV_32F).asMat(), mag, mag);
+        add(Mat.ones(mag.size(), CV_32F), mag, mag);
         log(mag, mag);
         mag.convertTo(mag, CV_8UC1);
-        normalize(mag, mag, 0, 255, NORM_MINMAX, CV_8UC1, null);
+        normalize(mag, mag, 0, 255, NORM_MINMAX, CV_8UC1);
         return mag;
     }
 }

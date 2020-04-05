@@ -18,13 +18,30 @@ package dev.ww23.image.converter;
 
 import org.opencv.core.Mat;
 
-/**
- * @author ww23
- */
-public interface Converter {
-    Mat start(Mat src);
-    void inverse(Mat com);
-    void addTextWatermark(Mat com, String watermark);
-    void addImageWatermark(Mat com, Mat watermark);
-    Mat showWatermark(Mat src);
+//TODO
+public class DwtConverter implements Converter {
+    @Override
+    public Mat start(Mat src) {
+        return null;
+    }
+
+    @Override
+    public void inverse(Mat com) {
+
+    }
+
+    @Override
+    public void addTextWatermark(Mat com, String watermark) {
+
+    }
+
+    @Override
+    public void addImageWatermark(Mat com, Mat watermark) {
+
+    }
+
+    @Override
+    public Mat showWatermark(Mat src) {
+        return null;
+    }
 }
